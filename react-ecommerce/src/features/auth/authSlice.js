@@ -7,7 +7,7 @@ const initialState = {
 };
 
 export const incrementAsync = createAsyncThunk(
-  "product/fetchProductList",
+  "counter/fetchProductList",
   async (amount) => {
     const response = await fetchProductList(amount);
     return response.data;
