@@ -7,12 +7,20 @@ export function fetchAllProducts() {
   });
 }
 
-export function fetchAllProductsByFilter(filter) {
+export function fetchAllProductsByFilter(filter, sort) {
   //filter={ "category": "smartphone" };
-  let queryString = "";
+  let queryString = '';
   for (let key in filter) {
-    queryString += `${key}=${filter[key]}&`;
+    const categoryValues = filter[key];
+    if (categoryValues.length) {
+      queryString += `${key}=${categoryValues}&`;
+    }
   }
+  for (let key in sort) {
+    queryString += `${key}=${sort[key]}&`;
+  }
+
+  
 
   return new Promise(async (resolve) => {
     const response = await fetch(
