@@ -1,34 +1,55 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchProductList } from "./productListAPI";
+import { checkLoggedInuser, createUser } from "./authAPI";
 
 const initialState = {
-  value: 0,
+  loggedInuser: null,
   status: "idle",
+  error: null
 };
 
-export const incrementAsync = createAsyncThunk(
-  "counter/fetchProductList",
-  async (amount) => {
-    const response = await fetchProductList(amount);
+export const createUserAsync = createAsyncThunk(
+  "user/createuser",
+  async (userData) => {
+    const response = await createUser(userData);
+    return response.data;
+  }
+);
+
+export const checkloggedInUserAsync = createAsyncThunk(
+  "user/checkLoggedInuser",
+  async (loginInfo) => {
+    const response = await checkLoggedInuser(loginInfo);
     return response.data;
   }
 );
 
 export  const productListSlice = createSlice({
-  name: "productList",
+  name: "auth",
   initialState,
   reducers: {
-    increment: (state) => {
-      state.value += 1;
-    },
   },
-  // extraReducers: (builder) => {
-  //   () => {}
-  // },
+  extraReducers: (builder) => {
+    builder
+      .addCase(createUserAsync.pending, (state) => {
+        state.status = "pending";
+      })
+      .addCase(createUserAsync.fulfilled, (state, action) => {
+        (state.status = "idle"); (state.loggedInuser = action.payload);
+      })
+      .addCase(checkloggedInUserAsync.pending, (state) => {
+        state.status = "pending";
+      })
+      .addCase(checkloggedInUserAsync.fulfilled, (state, action) => {
+        (state.status = "idle"); (state.loggedInuser = action.payload);
+      })
+      .addCase(checkloggedInUserAsync.rejected, (state, action) => {
+        (state.status = "idle"); (state.error = action.error);
+      })
+  },
 });
 
-export const { increment } = productListSlice.actions;
 
-export const selectProductList = (state) => state.productList;
+export const selectedLoggedInUser = (state) => state?.auth?.loggedInuser;
+export const errorLoggedInUser = (state) => state?.auth?.error;
 
 export default productListSlice.reducer;

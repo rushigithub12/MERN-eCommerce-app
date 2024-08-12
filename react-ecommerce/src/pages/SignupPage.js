@@ -1,9 +1,32 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createUserAsync,
+  selectedLoggedInUser,
+} from "../features/auth/authSlice";
 
 function SignupPage() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const dispatch = useDispatch();
+  const user = useSelector(selectedLoggedInUser);
+
+  if (user) {
+    console.log("user==>>", user);
+  }
+
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-white" >
+    <>
+      {user && <Navigate to="/" replace={true} />}
+
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-white">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             alt="Your Company"
@@ -16,7 +39,15 @@ function SignupPage() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6">
+          <form
+            onSubmit={handleSubmit((data) => {
+              dispatch(
+                createUserAsync({ email: data.email, password: data.password })
+              );
+              console.log(data);
+            })}
+            className="space-y-6"
+          >
             <div>
               <label
                 htmlFor="email"
@@ -27,12 +58,17 @@ function SignupPage() {
               <div className="mt-2">
                 <input
                   id="email"
-                  name="email"
+                  {...register("email", {
+                    required: "email is required",
+                    pattern: {
+                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                      message: "Please enter a valid email address.",
+                    },
+                  })}
                   type="email"
-                  required
-                  autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                <p className="text-red-500">{errors?.email?.message}</p>
               </div>
             </div>
 
@@ -48,11 +84,19 @@ function SignupPage() {
               <div className="mt-2">
                 <input
                   id="password"
-                  name="password"
+                  {...register("password", {
+                    required: "password is required",
+                    pattern: {
+                      value:
+                        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$/,
+                      message:
+                        "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character.",
+                    },
+                  })}
                   type="password"
-                  required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                <p className="text-red-500">{errors?.password?.message}</p>
               </div>
             </div>
 
@@ -68,11 +112,17 @@ function SignupPage() {
               <div className="mt-2">
                 <input
                   id="confirm-password"
-                  name="confirm-password"
+                  {...register("confirm-password", {
+                    required: "confirm-password required",
+                    validate: (value, formValues) =>
+                      value === formValues.password || "Password not matching",
+                  })}
                   type="password"
-                  required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                <p className="text-red-500">
+                  {errors["confirm-password"]?.message}
+                </p>
               </div>
             </div>
 
@@ -97,6 +147,7 @@ function SignupPage() {
           </p>
         </div>
       </div>
+    </>
   );
 }
 

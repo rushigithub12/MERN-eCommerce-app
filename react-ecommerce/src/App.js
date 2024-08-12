@@ -1,8 +1,8 @@
-import React from 'react';
-import './App.css';
-import Home from './pages/Home';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
+import React from "react";
+import "./App.css";
+import Home from "./pages/Home";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 import { createRoot } from "react-dom/client";
 import {
@@ -11,38 +11,53 @@ import {
   Route,
   Link,
 } from "react-router-dom";
-import { Cart } from './features/cart/Cart';
-import Checkout from './pages/Checkout';
-import ProductDetails from './features/productList/components/ProductDetails';
-import ProductDetailPage from './pages/ProductDetailPage';
+import { Cart } from "./features/cart/Cart";
+import Checkout from "./pages/Checkout";
+import ProductDetails from "./features/productList/components/ProductDetails";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import Protected from "./features/auth/components/Protected";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
-     <Home />
+      <Protected>
+        <Home />
+      </Protected>
     ),
   },
   {
     path: "login",
-    element: (<LoginPage />),
+    element: <LoginPage />,
   },
   {
     path: "signup",
-    element: (<SignupPage />),
+    element: <SignupPage />,
   },
   {
     path: "cart",
-    element: (<Cart />),
+    element: (
+      <Protected>
+        <Cart />
+      </Protected>
+    ),
   },
   {
     path: "checkout",
-    element: (<Checkout />)
+    element: (
+      <Protected>
+        <Checkout />
+      </Protected>
+    ),
   },
   {
-    path: "product-detail",
-    element: (<ProductDetailPage />)
-  }
+    path: "product-detail/:id",
+    element: (
+      <Protected>
+        <ProductDetailPage />
+      </Protected>
+    ),
+  },
 ]);
 
 function App() {

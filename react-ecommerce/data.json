@@ -6102,5 +6102,17 @@
       "label": "groceries",
       "checked": false
     }
+  ],
+  "users": [
+    {
+      "id": "18b2",
+      "email": "user@nextmail.com",
+      "password": "Password@123"
+    },
+    {
+      "id": "de1a",
+      "email": "rushikeshkamble9256@gmail.com",
+      "password": "Password@123"
+    }
   ]
 }
