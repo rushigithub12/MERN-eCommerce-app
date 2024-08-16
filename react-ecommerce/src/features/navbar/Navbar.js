@@ -14,6 +14,8 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectCartItems } from "../cart/cartSlice";
 
 const user = {
   name: "Tom Cook",
@@ -36,6 +38,10 @@ function classNames(...classes) {
 }
 
 function Navbar({ children }) {
+  const cartItems = useSelector(selectCartItems);
+
+  console.log("cartItems==>>", cartItems);
+
   return (
     <>
       <div className="min-h-full">
@@ -43,14 +49,14 @@ function Navbar({ children }) {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
               <div className="flex items-center">
-                <Link to="/" >
-                <div className="flex-shrink-0">
-                  <img
-                    alt="Your Company"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                    className="h-8 w-8"
-                  />
-                </div>
+                <Link to="/">
+                  <div className="flex-shrink-0">
+                    <img
+                      alt="Your Company"
+                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                      className="h-8 w-8"
+                    />
+                  </div>
                 </Link>
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
@@ -89,7 +95,7 @@ function Navbar({ children }) {
                     </button>
                   </Link>
                   <span className="inline-flex items-center rounded-md mb-7 -ml-3 bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
-                    3
+                    {cartItems?.length}
                   </span>
 
                   {/* Profile dropdown */}
@@ -189,7 +195,7 @@ function Navbar({ children }) {
                   </button>
                 </Link>
                 <span className="inline-flex items-center rounded-md mb-7 -ml-3 bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
-                  3
+                  {cartItems?.length}
                 </span>
               </div>
               <div className="mt-3 space-y-1 px-2">
