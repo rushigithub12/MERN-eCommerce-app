@@ -7,8 +7,14 @@ import {
   updateCartItemAsync,
 } from "../features/cart/cartSlice";
 import { useForm } from "react-hook-form";
-import { selectedLoggedInUser, updateUserAsync } from "../features/auth/authSlice";
-import { createdOrderAsync } from "../features/order/orderSlice";
+import {
+  selectedLoggedInUser,
+  updateUserAsync,
+} from "../features/auth/authSlice";
+import {
+  createdOrderAsync,
+  selectCurrentOrder,
+} from "../features/order/orderSlice";
 
 const addresses = [
   {
@@ -31,7 +37,7 @@ const addresses = [
 
 export default function Checkout() {
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState("cash")
+  const [paymentMethod, setPaymentMethod] = useState("cash");
 
   const {
     register,
@@ -41,7 +47,8 @@ export default function Checkout() {
     formState: { errors },
   } = useForm();
 
-  const user = useSelector(selectedLoggedInUser)
+  const user = useSelector(selectedLoggedInUser);
+  const currentOrder = useSelector(selectCurrentOrder);
   const dispatch = useDispatch();
 
   const cartItems = useSelector(selectCartItems);
@@ -63,28 +70,48 @@ export default function Checkout() {
   };
 
   const handleAddress = (e) => {
-    setSelectedAddress(user.addresses[e.target.value])
-  }
+    setSelectedAddress(user.addresses[e.target.value]);
+  };
 
   const handlePayment = (e) => {
-    setPaymentMethod(e.target.value)
-  }
+    setPaymentMethod(e.target.value);
+  };
 
   const handleOrder = () => {
-    const order = {cartItems, user, totalAmount, totalitems, paymentMethod, selectedAddress};
-    dispatch(createdOrderAsync(order))
-  }
+    if (selectedAddress && paymentMethod) {
+      const order = {
+        cartItems,
+        user,
+        totalAmount,
+        totalitems,
+        paymentMethod,
+        selectedAddress,
+        status: "pending",
+      };
+      dispatch(createdOrderAsync(order));
+    } else {
+      alert("Enter address and select paymentmethod");
+    }
+  };
 
   return (
     <>
       {!cartItems.length && <Navigate to="/" replace={true} />}
+      {currentOrder && currentOrder.id && (
+        <Navigate to={`/order-success/${currentOrder.id}`} replace={true} />
+      )}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
           <div className="lg:col-span-3">
             <form
               noValidate
               onSubmit={handleSubmit((data) => {
-                dispatch(updateUserAsync({...user, addresses: [...user.addresses, data]}));
+                dispatch(
+                  updateUserAsync({
+                    ...user,
+                    addresses: [...user.addresses, data],
+                  })
+                );
                 reset();
               })}
               className="bg-white p-5"
@@ -290,7 +317,7 @@ export default function Checkout() {
                           <input
                             name="address"
                             type="radio"
-                            className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer"
                             onChange={handleAddress}
                             value={index}
                           />
