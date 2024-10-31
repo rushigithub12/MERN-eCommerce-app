@@ -102,6 +102,9 @@ function App() {
   const user = useSelector(selectedLoggedInUser);
   const dispatch = useDispatch();
 
+
+  console.log("app", user)
+
   useEffect(() => {
     dispatch(fetchCartByUserAsync(user?.id));
     dispatch(fetchLoggedInUserAsync(user?.id));
