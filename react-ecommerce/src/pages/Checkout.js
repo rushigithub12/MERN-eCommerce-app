@@ -15,6 +15,7 @@ import {
   createdOrderAsync,
   selectCurrentOrder,
 } from "../features/order/orderSlice";
+import { selectUserInfo } from "../features/user/userSlice";
 
 const addresses = [
   {
@@ -47,7 +48,7 @@ export default function Checkout() {
     formState: { errors },
   } = useForm();
 
-  const user = useSelector(selectedLoggedInUser);
+  const user = useSelector(selectUserInfo);
   const currentOrder = useSelector(selectCurrentOrder);
   const dispatch = useDispatch();
 

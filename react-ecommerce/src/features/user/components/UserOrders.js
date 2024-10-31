@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectedLoggedInUser } from "../../auth/authSlice";
-import { fetchLoggedInUseOrdersrAsync, selectUserOrders } from "../userSlice";
+import { fetchLoggedInUseOrdersrAsync, selectUserInfo, selectUserOrders } from "../userSlice";
 
 function UserOrders() {
   const dispatch = useDispatch();
-  const user = useSelector(selectedLoggedInUser);
+  const user = useSelector(selectUserInfo);
   const userOrders = useSelector(selectUserOrders);
 
   useEffect(() => {
@@ -15,8 +15,8 @@ function UserOrders() {
   return (
     <div>
       {userOrders?.map((order) => (
-        <>
-          <div className="mx-auto mt-12 bg-white max-w-7xl px-2 sm:px-2 lg:px-4">
+        
+          <div key={order.id} className="mx-auto mt-12 bg-white max-w-7xl px-2 sm:px-2 lg:px-4">
             <div className="border-t border-gray-200 px-0 py-6 sm:px-0">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900">
                 Order #{order.id}
@@ -98,7 +98,7 @@ function UserOrders() {
               </div>
             </div>
           </div>
-        </>
+        
       ))}
     </div>
   );
