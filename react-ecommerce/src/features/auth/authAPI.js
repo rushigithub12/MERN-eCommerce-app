@@ -36,3 +36,10 @@ export function checkLoggedInuser(loginInfo) {
     }
   });
 }
+
+export function signOut(userId){
+  return new Promise(async(resolve) => {
+    //Todo: remove user from session
+    resolve({ data: "Succesfully logged out!"})
+  })
+}

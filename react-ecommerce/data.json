@@ -6156,10 +6156,19 @@
           "name": "Rushikesh Kamble",
           "email": "rushikeshkamble9256@gmail.com",
           "phone": "7620851558",
-          "street": "At Post Shirol, Tal-Shirol",
+          "street": "At Post Shirol",
           "city": "Kolhapur",
           "state": "Maharashtra",
           "pinCode": "416103"
+        },
+        {
+          "name": "User1 test",
+          "email": "user1test@email.com",
+          "phone": "774411233",
+          "street": "CyberTower, CA",
+          "city": "CA",
+          "state": "CA",
+          "pinCode": "000077"
         }
       ]
     }
