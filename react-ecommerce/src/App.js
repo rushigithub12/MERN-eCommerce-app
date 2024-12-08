@@ -3,8 +3,6 @@ import "./App.css";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-
-import { createRoot } from "react-dom/client";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -96,15 +94,11 @@ const router = createBrowserRouter([
   },
   {
     path: "logout",
-    element: (
-     <Logout />
-    ),
+    element: <Logout />,
   },
   {
     path: "forgot-password",
-    element: (
-     <ForgotPasswordPage />
-    ),
+    element: <ForgotPasswordPage />,
   },
   {
     path: "*",
@@ -115,7 +109,6 @@ const router = createBrowserRouter([
 function App() {
   const user = useSelector(selectedLoggedInUser);
   const dispatch = useDispatch();
-
 
   useEffect(() => {
     dispatch(fetchCartByUserAsync(user?.id));
