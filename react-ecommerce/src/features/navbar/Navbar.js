@@ -36,7 +36,7 @@ function classNames(...classes) {
 
 function Navbar({ children }) {
   const cartItems = useSelector(selectCartItems);
-
+  
   const user = useSelector(selectedLoggedInUser);
 
   return (
@@ -98,6 +98,7 @@ function Navbar({ children }) {
                       {cartItems?.length}
                     </span>
                   )}
+
 
                   {/* Profile dropdown */}
                   <Menu as="div" className="relative ml-3">
