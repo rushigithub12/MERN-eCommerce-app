@@ -44,6 +44,8 @@ function Signup() {
                   email: data.email,
                   password: data.password,
                   addresses: [],
+                  role: "user"
+                  //there will be admin role as well
                 })
               );
             })}
