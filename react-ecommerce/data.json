@@ -6126,6 +6126,7 @@
       "id": "18b2",
       "email": "user@nextmail.com",
       "password": "Password@123",
+      "role": "user",
       "addresses": [
         {
           "name": "User1",
@@ -6151,6 +6152,7 @@
       "id": "de1a",
       "email": "rushikeshkamble9256@gmail.com",
       "password": "Password@123",
+      "role": "user",
       "addresses": [
         {
           "name": "Rushikesh Kamble",
@@ -6171,6 +6173,30 @@
           "pinCode": "000077"
         }
       ]
+    },
+    {
+      "id": "5b17",
+      "email": "admin@email.com",
+      "password": "AdminPassword@123",
+      "role": "admin",
+      "addresses": []
+    },
+    {
+      "id": "f825",
+      "email": "userTest@gmail.com",
+      "password": "Password@123",
+      "addresses": [
+        {
+          "name": "User Test",
+          "email": "userTest@gmail.com",
+          "phone": "00000777",
+          "street": "CyberTower, CA",
+          "city": "CA",
+          "state": "LA",
+          "pinCode": "114466"
+        }
+      ],
+      "role": "user"
     }
   ],
   "cart": [],
@@ -8308,6 +8334,103 @@
         "city": "Kolhapur",
         "state": "Maharashtra",
         "pinCode": "416103"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "41d2",
+      "cartItems": [
+        {
+          "id": "27e1",
+          "title": "Eyeshadow Palette with Mirror",
+          "description": "The Eyeshadow Palette with Mirror offers a versatile range of eyeshadow shades for creating stunning eye looks. With a built-in mirror, it's convenient for on-the-go makeup application.",
+          "category": "beauty",
+          "price": 19.99,
+          "discountPercentage": 5.5,
+          "rating": 3.28,
+          "stock": 44,
+          "tags": [
+            "beauty",
+            "eyeshadow"
+          ],
+          "brand": "Glamour Beauty",
+          "sku": "MVCFH27F",
+          "weight": 3,
+          "dimensions": {
+            "width": 12.42,
+            "height": 8.63,
+            "depth": 29.13
+          },
+          "warrantyInformation": "1 year warranty",
+          "shippingInformation": "Ships in 2 weeks",
+          "availabilityStatus": "In Stock",
+          "reviews": [
+            {
+              "rating": 4,
+              "comment": "Very satisfied!",
+              "date": "2024-05-23T08:56:21.618Z",
+              "reviewerName": "Liam Garcia",
+              "reviewerEmail": "liam.garcia@x.dummyjson.com"
+            },
+            {
+              "rating": 1,
+              "comment": "Very disappointed!",
+              "date": "2024-05-23T08:56:21.618Z",
+              "reviewerName": "Nora Russell",
+              "reviewerEmail": "nora.russell@x.dummyjson.com"
+            },
+            {
+              "rating": 5,
+              "comment": "Highly impressed!",
+              "date": "2024-05-23T08:56:21.618Z",
+              "reviewerName": "Elena Baker",
+              "reviewerEmail": "elena.baker@x.dummyjson.com"
+            }
+          ],
+          "returnPolicy": "30 days return policy",
+          "minimumOrderQuantity": 32,
+          "meta": {
+            "createdAt": "2024-05-23T08:56:21.618Z",
+            "updatedAt": "2024-05-23T08:56:21.618Z",
+            "barcode": "2817839095220",
+            "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
+          },
+          "images": [
+            "https://cdn.dummyjson.com/products/images/beauty/Eyeshadow%20Palette%20with%20Mirror/1.png"
+          ],
+          "thumbnail": "https://cdn.dummyjson.com/products/images/beauty/Eyeshadow%20Palette%20with%20Mirror/thumbnail.png",
+          "quantity": 1,
+          "user": "f825"
+        }
+      ],
+      "user": {
+        "id": "f825",
+        "email": "userTest@gmail.com",
+        "password": "Password@123",
+        "addresses": [
+          {
+            "name": "User Test",
+            "email": "userTest@gmail.com",
+            "phone": "00000777",
+            "street": "CyberTower, CA",
+            "city": "CA",
+            "state": "LA",
+            "pinCode": "114466"
+          }
+        ],
+        "role": "user"
+      },
+      "totalAmount": 19.99,
+      "totalitems": 1,
+      "paymentMethod": "card",
+      "selectedAddress": {
+        "name": "User Test",
+        "email": "userTest@gmail.com",
+        "phone": "00000777",
+        "street": "CyberTower, CA",
+        "city": "CA",
+        "state": "LA",
+        "pinCode": "114466"
       },
       "status": "pending"
     }
