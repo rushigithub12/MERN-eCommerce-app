@@ -129,7 +129,7 @@ export default function AdminProductList() {
   };
 
   const handlePage = (page) => {
-    console.log("handlePage", page)
+    console.log("handlePage", page);
     setPage(page);
   };
 
@@ -227,8 +227,19 @@ export default function AdminProductList() {
               {/* Filters */}
 
               <DesktopFilter handleFilter={handleFilter} filters={filters} />
-              {/* Product grid */}
-              <ProductGrid products={products} />
+              <div className="lg:col-span-3">
+                <div>
+                  <Link
+                    to={"/admin/product-form"}
+                    className="rounded-md mx-10 my-5 bg-green-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    Add Product
+                  </Link>
+                </div>
+
+                {/* Product grid */}
+                <ProductGrid products={products} />
+              </div>
             </div>
           </section>
 
@@ -472,7 +483,7 @@ function PaginationComp({
                 onClick={(e) => handlePage(page > 1 ? page - 1 : page)}
                 className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
               >
-                <span className="sr-only">  </span>
+                <span className="sr-only"> </span>
                 <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
               </div>
 
@@ -515,8 +526,7 @@ function ProductGrid({ products }) {
             <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
               {products?.map((product) => (
                 <Link to={`product-detail/${product.id}`} key={product.id}>
-                <div >
-                  
+                  <div>
                     <div className="group relative border-2 border-solid border-gray-200 p-2">
                       <div className="min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
                         <img
@@ -557,8 +567,12 @@ function ProductGrid({ products }) {
                         </div>
                       </div>
                     </div>
-                  
-                </div>
+                    <div>
+                      <button className="rounded-md my-5 bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        Edit Product
+                      </button>
+                    </div>
+                  </div>
                 </Link>
               ))}
             </div>
