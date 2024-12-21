@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { addToCartAsync } from "../../cart/cartSlice";
 import { selectedLoggedInUser } from "../../auth/authSlice";
 import {
-  fetchAllProductByIdAsync,
+  fetchProductByIdAsync,
   selectedProductbyId,
 } from "../../productList/productSlice";
 
@@ -49,7 +49,7 @@ export default function AdminProductDetails() {
   };
 
   useEffect(() => {
-    dispatch(fetchAllProductByIdAsync(params.id));
+    dispatch(fetchProductByIdAsync(params.id));
   }, [dispatch, params.id]);
 
   console.log("productDetails==>>", product);

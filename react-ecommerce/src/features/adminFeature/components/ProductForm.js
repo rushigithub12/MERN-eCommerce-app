@@ -1,105 +1,89 @@
-import React from "react";
-import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
-import { ChevronDownIcon } from "@heroicons/react/16/solid";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearSelectedProduct,
+  createProductAsync,
+  fetchProductByIdAsync,
+  selectedProductbyId,
   selectProductBrands,
   selectProductCategories,
+  updateProductAsync,
 } from "../../productList/productSlice";
 import { useForm } from "react-hook-form";
-
-{
-  /*
-  "id": "6",
-"title": "Calvin Klein CK One",
-"description": "CK One by Calvin Klein is a classic unisex fragrance, known for its fresh and clean scent. It's a versatile fragrance suitable for everyday wear.",
-"category": "fragrances",
-"price": 49.99,
-"discountPercentage": 0.32,
-"rating": 4.85,
-"stock": 17,
-"tags": [
-  "fragrances",
-  "perfumes"
-],
-"brand": "Calvin Klein",
-"sku": "DZM2JQZE",
-"weight": 5,
-"dimensions": {
-  "width": 11.53,
-  "height": 14.44,
-  "depth": 6.81
-},
-"warrantyInformation": "5 year warranty",
-"shippingInformation": "Ships overnight",
-"availabilityStatus": "In Stock",
-"reviews": [
-  {
-    "rating": 5,
-    "comment": "Great value for money!",
-    "date": "2024-05-23T08:56:21.619Z",
-    "reviewerName": "Sophia Brown",
-    "reviewerEmail": "sophia.brown@x.dummyjson.com"
-  },
-  {
-    "rating": 3,
-    "comment": "Very disappointed!",
-    "date": "2024-05-23T08:56:21.619Z",
-    "reviewerName": "Madison Collins",
-    "reviewerEmail": "madison.collins@x.dummyjson.com"
-  },
-  {
-    "rating": 1,
-    "comment": "Poor quality!",
-    "date": "2024-05-23T08:56:21.619Z",
-    "reviewerName": "Maya Reed",
-    "reviewerEmail": "maya.reed@x.dummyjson.com"
-  }
-],
-"returnPolicy": "No return policy",
-"minimumOrderQuantity": 20,
-"meta": {
-  "createdAt": "2024-05-23T08:56:21.619Z",
-  "updatedAt": "2024-05-23T08:56:21.619Z",
-  "barcode": "2210136215089",
-  "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
-},
-"images": [
-  "https://cdn.dummyjson.com/products/images/fragrances/Calvin%20Klein%20CK%20One/1.png",
-  "https://cdn.dummyjson.com/products/images/fragrances/Calvin%20Klein%20CK%20One/2.png",
-  "https://cdn.dummyjson.com/products/images/fragrances/Calvin%20Klein%20CK%20One/3.png"
-],
-"thumbnail": "https://cdn.dummyjson.com/products/images/fragrances/Calvin%20Klein%20CK%20One/thumbnail.png"
-*/
-}
+import { useParams } from "react-router-dom";
 
 function ProductForm() {
   const {
     register,
     handleSubmit,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm();
+
+  const param = useParams();
+  const selectProduct = useSelector(selectedProductbyId);
 
   const dispatch = useDispatch();
 
   const brands = useSelector(selectProductBrands);
   const categories = useSelector(selectProductCategories);
 
+  useEffect(() => {
+    if (param.id) {
+      dispatch(fetchProductByIdAsync(param.id));
+    } else {
+      dispatch(clearSelectedProduct());
+    }
+  }, [dispatch, param.id]);
+
+  useEffect(() => {
+    if (selectProduct && param.id) {
+      console.log("selectProduct===>>>", selectProduct);
+      setValue("title", selectProduct.title);
+      setValue("description", selectProduct.description);
+      setValue("brand", selectProduct.brand);
+      setValue("price", selectProduct.price);
+      setValue("discountPercentage", selectProduct.discountPercentage);
+      setValue("stock", selectProduct.stock);
+      setValue("thumbnail", selectProduct.thumbnail);
+      setValue("category", selectProduct.category);
+      setValue("image1", selectProduct.images[0]);
+      setValue("image2", selectProduct.images[1]);
+    }
+  }, [selectProduct, param.id]);
+
+  const handleDeleteProduct = () => {
+    const updatedProductInfo = { ...selectProduct };
+    updatedProductInfo.deleted = true;
+
+    dispatch(updateProductAsync(updatedProductInfo));
+  };
 
   return (
     <>
       <form
-      noValidate
-      onSubmit={handleSubmit((data) => {
-        const product = {...data};
-        product.images = [product.image1, product.image2, product.thumbnail];
-        delete product.image1;
-        delete product.image2;
-       delete product.thumbnail;
+        noValidate
+        onSubmit={handleSubmit((data) => {
+          const product = { ...data };
+          product.images = [product.image1, product.image2];
+          delete product.image1;
+          delete product.image2;
 
-       console.log("productFornm==>>", product);
+          product.rating = 0;
+          product.price = +product.price;
+          product.discountPercentage = +product.discountPercentage;
+          product.stock = +product.stock;
 
-      })}
+          if (param.id) {
+            product.id = param.id;
+            product.rating = selectProduct.rating || 0;
+            dispatch(updateProductAsync(product));
+          } else {
+            dispatch(createProductAsync(product));
+            reset();
+          }
+        })}
       >
         <div className="space-y-12 bg-white p-12">
           <div className="border-b border-gray-900/10 pb-12">
@@ -168,7 +152,9 @@ function ProductForm() {
                   >
                     <option value="">--Choose Brand--</option>
                     {brands?.map((brand) => (
-                      <option key={brand.id}  value={brand.value}>{brand.label}</option>
+                      <option key={brand.id} value={brand.value}>
+                        {brand.label}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -193,7 +179,9 @@ function ProductForm() {
                   >
                     <option value="">--Choose Brand--</option>
                     {categories?.map((category) => (
-                      <option key={category.id} value={category.value}>{category.label}</option>
+                      <option key={category.id} value={category.value}>
+                        {category.label}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -216,7 +204,7 @@ function ProductForm() {
                       {...register("price", {
                         required: "price is required",
                         min: 1,
-                        max: 10000
+                        max: 10000,
                       })}
                       id="price"
                       className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -239,7 +227,7 @@ function ProductForm() {
                       {...register("discountPercentage", {
                         required: "discountPercentage is required",
                         min: 0,
-                        max: 100
+                        max: 100,
                       })}
                       id="discountPercentage"
                       className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -262,7 +250,7 @@ function ProductForm() {
                       {...register("stock", {
                         required: "stock is required",
                         min: 0,
-                        max: 100
+                        max: 100,
                       })}
                       id="stock"
                       className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -345,6 +333,15 @@ function ProductForm() {
           >
             Cancel
           </button>
+          {selectProduct && (
+            <button
+              onClick={handleDeleteProduct}
+              type="button"
+              className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Delete
+            </button>
+          )}
           <button
             type="submit"
             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

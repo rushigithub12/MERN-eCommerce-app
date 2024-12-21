@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { Radio, RadioGroup } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllProductByIdAsync, selectedProductbyId } from "../productSlice";
+import { fetchProductByIdAsync, selectedProductbyId } from "../productSlice";
 import { useParams } from "react-router-dom";
 import { addToCartAsync } from "../../cart/cartSlice";
 import { selectedLoggedInUser } from "../../auth/authSlice";
@@ -46,7 +46,7 @@ export default function ProductDetails() {
   }
 
   useEffect(() => {
-    dispatch(fetchAllProductByIdAsync(params.id));
+    dispatch(fetchProductByIdAsync(params.id));
   }, [dispatch, params.id]);
 
   console.log("productDetails==>>", product);
