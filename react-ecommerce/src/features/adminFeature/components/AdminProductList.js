@@ -35,7 +35,7 @@ import {
   selectProducts,
   selectTotalItems,
 } from "../../productList/productSlice";
-import { ITEM_PER_PAGE } from "../../../app/constants";
+import { discountedPrice, ITEM_PER_PAGE } from "../../../app/constants";
 
 const items = [
   {
@@ -556,10 +556,7 @@ function ProductGrid({ products }) {
                         <div>
                           <p className="text-sm block font-medium text-gray-900">
                             $
-                            {Math.round(
-                              product.price *
-                                (1 - product.discountPercentage / 100)
-                            )}
+                            {discountedPrice(product)}
                           </p>
                           <p className="text-sm block font-medium text-gray-400 line-through ">
                             ${product.price}

@@ -6,6 +6,7 @@ import {
   selectCartItems,
   updateCartItemAsync,
 } from "./cartSlice";
+import { discountedPrice } from "../../app/constants";
 
 export function Cart() {
   const [open, setOpen] = useState(true);
@@ -13,7 +14,7 @@ export function Cart() {
 
   const cartItems = useSelector(selectCartItems);
   const totalAmount = cartItems?.reduce(
-    (amount, item) => item.price * item.quantity + amount,
+    (amount, item) => discountedPrice(item) * item.quantity + amount,
     0
   );
   const totalitems = cartItems?.reduce(

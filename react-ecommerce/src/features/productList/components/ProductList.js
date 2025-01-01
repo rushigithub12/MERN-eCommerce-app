@@ -35,7 +35,7 @@ import {
   selectProducts,
   selectTotalItems,
 } from "../productSlice";
-import { ITEM_PER_PAGE } from "../../../app/constants";
+import { discountedPrice, ITEM_PER_PAGE } from "../../../app/constants";
 
 const items = [
   {
@@ -129,7 +129,6 @@ export default function ProductList() {
   };
 
   const handlePage = (page) => {
-    console.log("handlePage", page)
     setPage(page);
   };
 
@@ -472,7 +471,7 @@ function PaginationComp({
                 onClick={(e) => handlePage(page > 1 ? page - 1 : page)}
                 className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
               >
-                <span className="sr-only">  </span>
+                <span className="sr-only"> </span>
                 <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
               </div>
 
@@ -515,8 +514,7 @@ function ProductGrid({ products }) {
             <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
               {products?.map((product) => (
                 <Link to={`product-detail/${product.id}`} key={product.id}>
-                <div >
-                  
+                  <div>
                     <div className="group relative border-2 border-solid border-gray-200 p-2">
                       <div className="min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
                         <img
@@ -546,19 +544,20 @@ function ProductGrid({ products }) {
                         <div>
                           <p className="text-sm block font-medium text-gray-900">
                             $
-                            {Math.round(
-                              product.price *
-                                (1 - product.discountPercentage / 100)
-                            )}
+                            {discountedPrice(product)}
                           </p>
                           <p className="text-sm block font-medium text-gray-400 line-through ">
                             ${product.price}
                           </p>
                         </div>
                       </div>
+                      {product.deleted && (
+                        <div className="text-red-400 font-semibold">
+                          Product Deleted
+                        </div>
+                      )}
                     </div>
-                  
-                </div>
+                  </div>
                 </Link>
               ))}
             </div>
