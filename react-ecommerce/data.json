@@ -6234,7 +6234,8 @@
         "city": "Kolhapur",
         "state": "Maharashtra",
         "pinCode": "416103"
-      }
+      },
+      "status": "pending"
     },
     {
       "id": "11c4",
@@ -7256,7 +7257,7 @@
         "state": "Maharashtra",
         "pinCode": "416103"
       },
-      "status": "pending"
+      "status": "delivered"
     },
     {
       "id": "ea94",
@@ -8050,7 +8051,7 @@
         "state": "LA",
         "pinCode": "114466"
       },
-      "status": "pending"
+      "status": "cancel"
     },
     {
       "id": "3f5a",

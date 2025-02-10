@@ -13,19 +13,16 @@ import {
   selectTotalOrder,
   updateOrderAsync,
 } from "../../order/orderSlice";
+import PaginationComponent from "../../../common/PaginationComponent";
 
 function AdminOrders() {
   const [page, setPage] = useState(1);
   const [editableOrder, setEditableOrder] = useState(-1);
+  const [sort, setSort] = useState({});
 
   const orders = useSelector(selectOrders);
   const totalOrders = useSelector(selectTotalOrder);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const pagination = { _page: page, _limit: ITEM_PER_PAGE };
-    dispatch(fetchAllOrdersAsync({ pagination }));
-  }, [dispatch, page]);
 
   const handleShow = (order) => {
     console.log("handleShow===>>>", order);
@@ -40,6 +37,35 @@ function AdminOrders() {
     dispatch(updateOrderAsync(updatedOrder));
   };
 
+  const handlePage = (page) => {
+    setPage(page);
+  };
+
+  const handleSort = (orderOption) => {
+    const sortOption = { _sort: orderOption.sort, _order: orderOption.order };
+    setSort(sortOption);
+  };
+
+  useEffect(() => {
+    const pagination = { _page: page, _per_page: ITEM_PER_PAGE };
+    dispatch(fetchAllOrdersAsync({ sort, pagination }));
+  }, [dispatch, page, sort]);
+
+  const chooseColor = (status) => {
+    switch (status) {
+      case "pending":
+        return "bg-purple-200 text-purple-600";
+      case "dispatched":
+        return "bg-yellow-200 text-yellow-600";
+      case "delivered":
+        return "bg-green-200 text-green-600";
+      case "cancel":
+        return "bg-red-200 text-red-600";
+      default:
+        return "bg-purple-200 text-purple-600";
+    }
+  };
+
   return (
     <>
       <div className="overflow-x-auto">
@@ -49,9 +75,39 @@ function AdminOrders() {
               <table className="min-w-max w-full table-auto">
                 <thead>
                   <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                    <th className="py-3 px-6 text-left">Order#</th>
+                    <th
+                      className="py-3 px-6 text-left cursor-pointer"
+                      onClick={() =>
+                        handleSort({
+                          sort: "id",
+                          order: sort._order === "asc" ? "desc" : "asc",
+                        })
+                      }
+                    >
+                      Order#
+                      {sort._sort === "id" && sort._order === "asc" ? (
+                        <ArrowUpIcon className="ml-1 h-4 w-4 inline" />
+                      ) : (
+                        <ArrowDownIcon className="ml-1 h-4 w-4 inline" />
+                      )}
+                    </th>
                     <th className="py-3 px-6 text-left">Items</th>
-                    <th className="py-3 px-6 text-center">Total Amount</th>
+                    <th
+                      className="py-3 px-6 text-center"
+                      onClick={() =>
+                        handleSort({
+                          sort: "totalAmount",
+                          order: sort._order === "asc" ? "desc" : "asc",
+                        })
+                      }
+                    >
+                      Total Amount
+                      {sort._sort === "totalAmount" && sort._order === "asc" ? (
+                        <ArrowUpIcon className="ml-1 h-4 w-4 inline" />
+                      ) : (
+                        <ArrowDownIcon className="ml-1 h-4 w-4 inline" />
+                      )}
+                    </th>
                     <th className="py-3 px-6 text-center">Shipping Address</th>
                     <th className="py-3 px-6 text-center">Status</th>
                     <th className="py-3 px-6 text-center">Actions</th>
@@ -112,7 +168,11 @@ function AdminOrders() {
                             <option value="cancel">Cancel</option>
                           </select>
                         ) : (
-                          <span className="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">
+                          <span
+                            className={` ${chooseColor(
+                              order.status
+                            )} bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs`}
+                          >
                             {order.status}
                           </span>
                         )}
@@ -138,6 +198,39 @@ function AdminOrders() {
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+        <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+          <div className="flex flex-1 justify-between sm:hidden">
+            <a
+              href="#"
+              className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Previous
+            </a>
+            <a
+              href="#"
+              className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Next
+            </a>
+          </div>
+          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm text-gray-700">
+                Showing <span className="font-medium">1</span> to{" "}
+                <span className="font-medium">10</span> of{" "}
+                <span className="font-medium">97</span> results
+              </p>
+            </div>
+
+            <PaginationComponent
+              handlePage={handlePage}
+              page={page}
+              setPage={setPage}
+              totalItems={totalOrders}
+              ITEMS_PER_PAGE={ITEM_PER_PAGE}
+            />
           </div>
         </div>
       </div>
