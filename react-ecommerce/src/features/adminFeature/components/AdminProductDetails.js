@@ -53,8 +53,6 @@ export default function AdminProductDetails() {
     dispatch(fetchProductByIdAsync(params.id));
   }, [dispatch, params.id]);
 
-  console.log("productDetails==>>", product);
-
   return (
     <div className="bg-white">
       {product && (

@@ -8,10 +8,7 @@ export default function PaginationComponent({
   totalItems,
   ITEMS_PER_PAGE,
 }) {
-    
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-  console.log("totalPages===>>", totalPages,  totalItems, ITEMS_PER_PAGE);
 
   return (
     <>

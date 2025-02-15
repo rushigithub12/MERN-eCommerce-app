@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
+import Modal from "react-modal";
 import {
   removeItemFromCartAsync,
   selectCartItems,
   updateCartItemAsync,
 } from "./cartSlice";
 import { discountedPrice } from "../../app/constants";
+import AlertModal from "../../common/AlertModal";
+
+Modal.setAppElement("#root"); // Required for accessibility
 
 export function Cart() {
   const [open, setOpen] = useState(true);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
   const dispatch = useDispatch();
 
   const cartItems = useSelector(selectCartItems);
@@ -21,14 +28,26 @@ export function Cart() {
     (total, item) => item.quantity + total,
     0
   );
-  console.log("totalitems==>>", cartItems, totalitems);
 
   const handleQuantity = (e, item) => {
     dispatch(updateCartItemAsync({ ...item, quantity: +e.target.value }));
   };
 
-  const removeItemFromCart = (e, item) => {
-    dispatch(removeItemFromCartAsync(item.id));
+  const openModal = (item) => {
+    setSelectedItem(item);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedItem(null);
+  };
+
+  const confirmRemoveItem = () => {
+    if (selectedItem) {
+      dispatch(removeItemFromCartAsync(selectedItem.id));
+    }
+    closeModal();
   };
 
   return (
@@ -84,16 +103,23 @@ export function Cart() {
                             <option value="5">5</option>
                           </select>
                         </div>
-
                         <div className="flex">
                           <button
                             type="button"
                             className="font-medium text-indigo-600 hover:text-indigo-500"
-                            onClick={(e) => removeItemFromCart(e, item)}
+                            onClick={() => openModal(item)}
                           >
                             Remove
                           </button>
                         </div>
+                        <AlertModal
+                          isOpen={modalIsOpen}
+                          onClose={closeModal}
+                          onConfirm={confirmRemoveItem}
+                          type="error"
+                          title={`Delete ${item.title || ""}`}
+                          message="Are you sure you want to delete this Cart item ?"
+                        />
                       </div>
                     </div>
                   </li>
