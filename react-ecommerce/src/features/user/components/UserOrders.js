@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectedLoggedInUser } from "../../auth/authSlice";
 import { fetchLoggedInUseOrdersrAsync, selectUserInfo, selectUserOrders } from "../userSlice";
+import { discountedPrice } from "../../../app/constants";
 
 function UserOrders() {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ function UserOrders() {
                               <h3>
                                 <a href={order.href}>{order.title}</a>
                               </h3>
-                              <p className="ml-4">${order.price}</p>
+                              <p className="ml-4">${discountedPrice(order)}</p>
                             </div>
                             <p className="mt-1 text-sm text-gray-500">
                               {order.brand}
