@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
-import Modal from "react-modal";
+import { discountedPrice } from "../../app/constants";
+import AlertModal from "../../common/AlertModal";
 import {
   removeItemFromCartAsync,
   selectCartItems,
   updateCartItemAsync,
 } from "./cartSlice";
-import { discountedPrice } from "../../app/constants";
-
-Modal.setAppElement("#root"); // Required for accessibility
 
 export function Cart() {
   const [openModal, setOpenModal] = useState(null);
@@ -17,7 +15,6 @@ export function Cart() {
   const dispatch = useDispatch();
 
   const cartItems = useSelector(selectCartItems);
-  console.log("cartItems==>>>>", cartItems);
   const totalAmount = cartItems?.reduce(
     (amount, item) => discountedPrice(item) * item.quantity + amount,
     0
@@ -89,15 +86,16 @@ export function Cart() {
                           </select>
                         </div>
                         <div className="flex">
-                          <Modal
+                          <AlertModal
                             title={`Delete ${item.product.title}`}
                             message="Are you sure you want to delete this Cart item ?"
                             dangerOption="Delete"
                             cancelOption="Cancel"
-                            dangerAction={(e) => handleRemove(e, item.id)}
-                            cancelAction={() => setOpenModal(null)}
-                            showModal={openModal === item.id}
-                          ></Modal>
+                            onConfirm={(e) => handleRemove(e, item.id)}
+                            onClose={() => setOpenModal(null)}
+                            isOpen={openModal === item.id}
+                            type="error"
+                          />
                           <button
                             type="button"
                             className="font-medium text-indigo-600 hover:text-indigo-500"
