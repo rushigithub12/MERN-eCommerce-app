@@ -8,18 +8,16 @@ import {
   updateCartItemAsync,
 } from "./cartSlice";
 import { discountedPrice } from "../../app/constants";
-import AlertModal from "../../common/AlertModal";
 
 Modal.setAppElement("#root"); // Required for accessibility
 
 export function Cart() {
-  const [open, setOpen] = useState(true);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [openModal, setOpenModal] = useState(null);
 
   const dispatch = useDispatch();
 
   const cartItems = useSelector(selectCartItems);
+  console.log("cartItems==>>>>", cartItems);
   const totalAmount = cartItems?.reduce(
     (amount, item) => discountedPrice(item) * item.quantity + amount,
     0
@@ -33,21 +31,8 @@ export function Cart() {
     dispatch(updateCartItemAsync({ ...item, quantity: +e.target.value }));
   };
 
-  const openModal = (item) => {
-    setSelectedItem(item);
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-    setSelectedItem(null);
-  };
-
-  const confirmRemoveItem = () => {
-    if (selectedItem) {
-      dispatch(removeItemFromCartAsync(selectedItem.id));
-    }
-    closeModal();
+  const handleRemove = (e, id) => {
+    dispatch(removeItemFromCartAsync(id));
   };
 
   return (
@@ -65,8 +50,8 @@ export function Cart() {
                   <li key={item.id} className="flex py-6">
                     <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                       <img
-                        alt={item.title}
-                        src={item.thumbnail}
+                        alt={item.product.title}
+                        src={item.product.thumbnail}
                         className="h-full w-full object-cover object-center"
                       />
                     </div>
@@ -75,12 +60,12 @@ export function Cart() {
                       <div>
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <h3>
-                            <a href={item.href}>{item.title}</a>
+                            <a href={item.href}>{item.product.title}</a>
                           </h3>
-                          <p className="ml-4">${item.price}</p>
+                          <p className="ml-4">${item.product.discountPrice}</p>
                         </div>
                         <p className="mt-1 text-sm text-gray-500">
-                          {item.brand}
+                          {item.product.brand}
                         </p>
                       </div>
                       <div className="flex flex-1 items-end justify-between text-sm">
@@ -104,22 +89,25 @@ export function Cart() {
                           </select>
                         </div>
                         <div className="flex">
+                          <Modal
+                            title={`Delete ${item.product.title}`}
+                            message="Are you sure you want to delete this Cart item ?"
+                            dangerOption="Delete"
+                            cancelOption="Cancel"
+                            dangerAction={(e) => handleRemove(e, item.id)}
+                            cancelAction={() => setOpenModal(null)}
+                            showModal={openModal === item.id}
+                          ></Modal>
                           <button
                             type="button"
                             className="font-medium text-indigo-600 hover:text-indigo-500"
-                            onClick={() => openModal(item)}
+                            onClick={(e) => {
+                              setOpenModal(item.id);
+                            }}
                           >
                             Remove
                           </button>
                         </div>
-                        <AlertModal
-                          isOpen={modalIsOpen}
-                          onClose={closeModal}
-                          onConfirm={confirmRemoveItem}
-                          type="error"
-                          title={`Delete ${item.title || ""}`}
-                          message="Are you sure you want to delete this Cart item ?"
-                        />
                       </div>
                     </div>
                   </li>
@@ -153,7 +141,6 @@ export function Cart() {
                 <Link to="/">
                   <button
                     type="button"
-                    onClick={() => setOpen(false)}
                     className="font-medium text-indigo-600 hover:text-indigo-500"
                   >
                     Continue Shopping
