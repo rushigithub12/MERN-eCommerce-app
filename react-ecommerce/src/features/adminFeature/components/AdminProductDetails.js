@@ -44,7 +44,11 @@ export default function AdminProductDetails() {
 
   const handleAddCart = (e) => {
     e.preventDefault();
-    const newCartitem = { ...product, quantity: 1, user: user.id };
+    const newCartitem ={
+        product: product.id,
+        quantity: 1,
+        user: user.id,
+      };
     delete newCartitem["id"];
     dispatch(addToCartAsync({ ...newCartitem }));
   };

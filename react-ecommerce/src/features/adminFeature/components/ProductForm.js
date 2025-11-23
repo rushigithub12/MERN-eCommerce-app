@@ -10,7 +10,7 @@ import {
   updateProductAsync,
 } from "../../productList/productSlice";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function ProductForm() {
   const {
@@ -20,6 +20,8 @@ function ProductForm() {
     reset,
     formState: { errors },
   } = useForm();
+
+  const navigate = useNavigate();
 
   const param = useParams();
   const selectProduct = useSelector(selectedProductbyId);
@@ -39,7 +41,6 @@ function ProductForm() {
 
   useEffect(() => {
     if (selectProduct && param.id) {
-      console.log("selectProduct===>>>", selectProduct);
       setValue("title", selectProduct.title);
       setValue("description", selectProduct.description);
       setValue("brand", selectProduct.brand);
@@ -58,6 +59,10 @@ function ProductForm() {
     updatedProductInfo.deleted = true;
 
     dispatch(updateProductAsync(updatedProductInfo));
+  };
+
+  const handleCancelButton = () => {
+    navigate("/admin");
   };
 
   return (
@@ -330,6 +335,7 @@ function ProductForm() {
           <button
             type="button"
             className="text-sm/6 font-semibold text-gray-900"
+            onClick={handleCancelButton}
           >
             Cancel
           </button>

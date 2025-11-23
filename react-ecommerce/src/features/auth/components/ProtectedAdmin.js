@@ -5,6 +5,7 @@ import { Navigate } from "react-router-dom";
 
 function ProtectedAdmin({ children }) {
   const user = useSelector(selectedLoggedInUser);
+  
   if (!user) {
     return <Navigate to="/login" replace={true} />;
   }

@@ -32,8 +32,8 @@ function UserOrders() {
                       <li key={order.id} className="flex py-6">
                         <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                           <img
-                            alt={order.title}
-                            src={order.thumbnail}
+                            alt={order.product.title}
+                            src={order.product.thumbnail}
                             className="h-full w-full object-cover object-center"
                           />
                         </div>
@@ -42,12 +42,12 @@ function UserOrders() {
                           <div>
                             <div className="flex justify-between text-base font-medium text-gray-900">
                               <h3>
-                                <a href={order.href}>{order.title}</a>
+                                <a href={order.href}>{order.product.title}</a>
                               </h3>
-                              <p className="ml-4">${discountedPrice(order)}</p>
+                              <p className="ml-4">${discountedPrice(order.product)}</p>
                             </div>
                             <p className="mt-1 text-sm text-gray-500">
-                              {order.brand}
+                              {order.product.brand}
                             </p>
                           </div>
                           <div className="flex flex-1 items-end justify-between text-sm">

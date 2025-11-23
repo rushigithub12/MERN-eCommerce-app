@@ -24,7 +24,7 @@ export function createProduct(product) {
 export function updateProduct(product) {
   return new Promise(async (resolve) => {
     const response = await fetch(`http://localhost:8080/products/${product.id}`, {
-      method: "PUT",
+      method: "PATCH",
       body: JSON.stringify(product),
       headers: {
         "content-type": "application/json",
