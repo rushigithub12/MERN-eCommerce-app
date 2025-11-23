@@ -25,7 +25,7 @@ export function Cart() {
   );
 
   const handleQuantity = (e, item) => {
-    dispatch(updateCartItemAsync({ ...item, quantity: +e.target.value }));
+    dispatch(updateCartItemAsync({ id: item.id, quantity: +e.target.value }));
   };
 
   const handleRemove = (e, id) => {
