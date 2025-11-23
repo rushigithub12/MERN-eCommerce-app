@@ -730,6 +730,7 @@
       "title": "Apple",
       "description": "Fresh and crisp apples, perfect for snacking or incorporating into various recipes.",
       "category": "groceries",
+      "brand": "Apple",
       "price": 1.99,
       "discountPercentage": 1.97,
       "rating": 2.96,

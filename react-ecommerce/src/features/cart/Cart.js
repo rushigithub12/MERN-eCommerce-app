@@ -16,7 +16,7 @@ export function Cart() {
 
   const cartItems = useSelector(selectCartItems);
   const totalAmount = cartItems?.reduce(
-    (amount, item) => discountedPrice(item) * item.quantity + amount,
+    (amount, item) => discountedPrice(item.product) * item.quantity + amount,
     0
   );
   const totalitems = cartItems?.reduce(
@@ -59,7 +59,9 @@ export function Cart() {
                           <h3>
                             <a href={item.href}>{item.product.title}</a>
                           </h3>
-                          <p className="ml-4">${item.product.discountPrice}</p>
+                          <p className="ml-4">
+                            ${discountedPrice(item.product)}
+                          </p>
                         </div>
                         <p className="mt-1 text-sm text-gray-500">
                           {item.product.brand}
