@@ -44,7 +44,6 @@ export default function ProductDetails() {
     e.preventDefault();
     if (cartItems.findIndex((cart) => cart.product.id === product.id) < 0) {
       const newCartitem = {
-        ...product,
         product: product.id,
         quantity: 1,
         user: user.id,
