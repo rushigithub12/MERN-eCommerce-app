@@ -83,7 +83,7 @@ export default function Checkout() {
     if (selectedAddress && paymentMethod) {
       const order = {
         cartItems,
-        user,
+        user: user.id,
         totalAmount,
         totalitems,
         paymentMethod,

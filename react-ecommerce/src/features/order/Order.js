@@ -8,7 +8,7 @@ import {
 } from "./cartSlice";
 import { discountedPrice } from "../../app/constants";
 
-export function Cart() {
+export function Order() {
   const [open, setOpen] = useState(true);
   const dispatch = useDispatch();
 
@@ -21,7 +21,6 @@ export function Cart() {
     (total, item) => item.quantity + total,
     0
   );
-  console.log("totalitems==>>", cartItems, totalitems);
 
   const handleQuantity = (e, item) => {
     dispatch(updateCartItemAsync({ ...item, quantity: +e.target.value }));
