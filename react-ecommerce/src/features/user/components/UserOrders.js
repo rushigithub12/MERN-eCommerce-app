@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectedLoggedInUser } from "../../auth/authSlice";
 import { fetchLoggedInUseOrdersrAsync, selectUserInfo, selectUserOrders } from "../userSlice";
 import { discountedPrice } from "../../../app/constants";
 
@@ -9,9 +8,9 @@ function UserOrders() {
   const user = useSelector(selectUserInfo);
   const userOrders = useSelector(selectUserOrders);
 
-  useEffect(() => {
-    dispatch(fetchLoggedInUseOrdersrAsync(user.id));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchLoggedInUseOrdersrAsync(user.id));
+  // }, []);
 
   return (
     <div>

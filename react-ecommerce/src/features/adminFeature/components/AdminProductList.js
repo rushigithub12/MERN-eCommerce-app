@@ -36,6 +36,9 @@ import {
   selectTotalItems,
 } from "../../productList/productSlice";
 import { discountedPrice, ITEM_PER_PAGE } from "../../../app/constants";
+import { selectedLoggedInUser } from "../../auth/authSlice";
+import { fetchCartByUserAsync } from "../../cart/cartSlice";
+import { fetchLoggedInUserAsync } from "../../user/userSlice";
 
 const items = [
   {
@@ -90,6 +93,13 @@ export default function AdminProductList() {
   const brands = useSelector(selectProductBrands);
   const categories = useSelector(selectProductCategories);
 
+  const user = useSelector(selectedLoggedInUser);
+
+  useEffect(() => {
+    dispatch(fetchCartByUserAsync(user?.id));
+    dispatch(fetchLoggedInUserAsync(user?.id));
+  }, [dispatch, user]);
+
   const filters = [
     {
       id: "category",
@@ -117,7 +127,6 @@ export default function AdminProductList() {
       );
       newFilter[section.id].splice(index, 1);
     }
-    console.log("newFilter==>>", newFilter);
 
     setFilter(newFilter);
   };
@@ -129,7 +138,6 @@ export default function AdminProductList() {
   };
 
   const handlePage = (page) => {
-    console.log("handlePage", page);
     setPage(page);
   };
 
@@ -555,8 +563,7 @@ function ProductGrid({ products }) {
                         </div>
                         <div>
                           <p className="text-sm block font-medium text-gray-900">
-                            $
-                            {discountedPrice(product)}
+                            ${discountedPrice(product)}
                           </p>
                           <p className="text-sm block font-medium text-gray-400 line-through ">
                             ${product.price}
@@ -564,7 +571,9 @@ function ProductGrid({ products }) {
                         </div>
                       </div>
                       {product.deleted && (
-                        <div className="text-red-400 font-semibold">Product Deleted</div>
+                        <div className="text-red-400 font-semibold">
+                          Product Deleted
+                        </div>
                       )}
                     </div>
                     <div className="mt-5">

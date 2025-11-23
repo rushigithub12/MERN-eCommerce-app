@@ -33,6 +33,9 @@ import {
 } from "../productSlice";
 import { discountedPrice, ITEM_PER_PAGE } from "../../../app/constants";
 import PaginationComponent from "../../../common/PaginationComponent";
+import { selectedLoggedInUser } from "../../auth/authSlice";
+import { fetchCartByUserAsync } from "../../cart/cartSlice";
+import { fetchLoggedInUserAsync } from "../../user/userSlice";
 
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
@@ -104,6 +107,14 @@ export default function ProductList() {
     setPage(page);
   };
 
+  const user = useSelector(selectedLoggedInUser);
+
+  useEffect(() => {
+    
+    dispatch(fetchCartByUserAsync(user?.id));
+    dispatch(fetchLoggedInUserAsync(user?.id));
+  }, [dispatch, user]);
+
   useEffect(() => {
     setPage(1);
   }, [totalItems, sort]);
@@ -111,7 +122,7 @@ export default function ProductList() {
   useEffect(() => {
     const pagination = { _page: page, _per_page: ITEM_PER_PAGE };
     dispatch(fetchAllProductByFiltersAsync({ filter, sort, pagination }));
-  }, [dispatch, filter, sort, page]);
+  }, [filter, sort, page]);
 
   useEffect(() => {
     dispatch(fetchAllProductByBrandsAsync());
