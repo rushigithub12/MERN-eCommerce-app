@@ -7,14 +7,13 @@ import {
 
 const initialState = {
   status: "idle",
-  userOrders: [],
   userInfo: null,
 };
 
-export const fetchLoggedInUseOrdersrAsync = createAsyncThunk(
+export const fetchLoggedInUserOrdersrAsync = createAsyncThunk(
   "user/fetchLoggedInUserOrders",
-  async (useIrd) => {
-    const response = await fetchLoggedInUserOrders(useIrd);
+  async (userId) => {
+    const response = await fetchLoggedInUserOrders(userId);
     return response.data;
   }
 );
@@ -41,12 +40,12 @@ export const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchLoggedInUseOrdersrAsync.pending, (state) => {
+      .addCase(fetchLoggedInUserOrdersrAsync.pending, (state) => {
         state.status = "pending";
       })
-      .addCase(fetchLoggedInUseOrdersrAsync.fulfilled, (state, action) => {
+      .addCase(fetchLoggedInUserOrdersrAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.userOrders = action.payload;
+        state.userInfo.orders = action.payload;
       })
       .addCase(updateUserAsync.pending, (state) => {
         state.status = "pending";
@@ -67,7 +66,7 @@ export const userSlice = createSlice({
 
 // export const { resetOrder } = userSlice.actions;
 
-export const selectUserOrders = (state) => state.user.userOrders;
+export const selectUserOrders = (state) => state.userInfo.orders;
 export const selectUserInfo = (state) => state.user.userInfo;
 
 export default userSlice.reducer;

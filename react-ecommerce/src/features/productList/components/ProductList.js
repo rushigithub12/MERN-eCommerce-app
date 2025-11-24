@@ -109,11 +109,7 @@ export default function ProductList() {
 
   const user = useSelector(selectedLoggedInUser);
 
-  useEffect(() => {
-    
-    dispatch(fetchCartByUserAsync(user?.id));
-    dispatch(fetchLoggedInUserAsync(user?.id));
-  }, [dispatch, user]);
+
 
   useEffect(() => {
     setPage(1);

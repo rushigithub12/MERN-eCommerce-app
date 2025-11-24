@@ -45,7 +45,7 @@ function ProductForm() {
       setValue("description", selectProduct.description);
       setValue("brand", selectProduct.brand);
       setValue("price", selectProduct.price);
-      setValue("discountPercentage", selectProduct.discountPercentage);
+      setValue("discountPercentage", selectProduct.discountPercentage * 100);
       setValue("stock", selectProduct.stock);
       setValue("thumbnail", selectProduct.thumbnail);
       setValue("category", selectProduct.category);
@@ -76,9 +76,9 @@ function ProductForm() {
           delete product.image2;
 
           product.rating = 0;
-          product.price = +product.price;
-          product.discountPercentage = +product.discountPercentage;
-          product.stock = +product.stock;
+          product.price = Number(product.price);
+          product.stock = Number(product.stock);
+          product.discountPercentage = Number(product.discountPercentage) / 100;
 
           if (param.id) {
             product.id = param.id;
@@ -231,13 +231,21 @@ function ProductForm() {
                       type="number"
                       {...register("discountPercentage", {
                         required: "discountPercentage is required",
-                        min: 0,
-                        max: 100,
+                        min: { value: 0, message: "Minimum is 0%" },
+                        max: { value: 99, message: "Maximum is 99%" },
+                        validate: (v) =>
+                          /^\d{1,2}(\.\d{1,2})?$/.test(v) ||
+                          "Enter max 2 digits (0–99)",
                       })}
                       id="discountPercentage"
                       className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     />
                   </div>
+                  {errors.discountPercentage && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.discountPercentage.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
