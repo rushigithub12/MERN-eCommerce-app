@@ -29,10 +29,8 @@ import {
   fetchAllProductByBrandsAsync,
   fetchAllProductByCategoriesAsync,
   fetchAllProductByFiltersAsync,
-  fetchAllProductsAsync,
   selectProductBrands,
   selectProductCategories,
-  selectProducts,
   selectTotalItems,
 } from "../../productList/productSlice";
 import { discountedPrice, ITEM_PER_PAGE } from "../../../app/constants";
@@ -147,7 +145,9 @@ export default function AdminProductList() {
 
   useEffect(() => {
     const pagination = { _page: page, _limit: ITEM_PER_PAGE };
-    dispatch(fetchAllProductByFiltersAsync({ filter, sort, pagination }));
+    dispatch(
+      fetchAllProductByFiltersAsync({ filter, sort, pagination, admin: true })
+    );
   }, [dispatch, filter, sort, page]);
 
   useEffect(() => {
@@ -573,6 +573,11 @@ function ProductGrid({ products }) {
                       {product.deleted && (
                         <div className="text-red-400 font-semibold">
                           Product Deleted
+                        </div>
+                      )}
+                      {product.stock <= 0 && (
+                        <div className="text-red-400 font-semibold">
+                          Out of Stock
                         </div>
                       )}
                     </div>

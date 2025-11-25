@@ -107,10 +107,6 @@ export default function ProductList() {
     setPage(page);
   };
 
-  const user = useSelector(selectedLoggedInUser);
-
-
-
   useEffect(() => {
     setPage(1);
   }, [totalItems, sort]);

@@ -1,12 +1,3 @@
-// A mock function to mimic making an async request for data
-export function fetchAllProducts() {
-  return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/products");
-    const data = await response.json();
-    resolve({ data });
-  });
-}
-
 export function createProduct(product) {
   return new Promise(async (resolve) => {
     const response = await fetch("http://localhost:8080/products", {
@@ -23,13 +14,16 @@ export function createProduct(product) {
 
 export function updateProduct(product) {
   return new Promise(async (resolve) => {
-    const response = await fetch(`http://localhost:8080/products/${product.id}`, {
-      method: "PATCH",
-      body: JSON.stringify(product),
-      headers: {
-        "content-type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `http://localhost:8080/products/${product.id}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(product),
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    );
     const data = await response.json();
     resolve({ data });
   });
@@ -43,7 +37,7 @@ export function fetchProductById(id) {
   });
 }
 
-export function fetchAllProductsByFilter(filter, sort, pagination) {
+export function fetchAllProductsByFilter(filter, sort, pagination, admin) {
   //filter={ "category": "smartphone" };
   let queryString = "";
   for (let key in filter) {
@@ -52,7 +46,7 @@ export function fetchAllProductsByFilter(filter, sort, pagination) {
       queryString += `${key}=${categoryValues}&`;
     }
   }
-  
+
   for (let key in sort) {
     queryString += `${key}=${sort[key]}&`;
   }
@@ -61,12 +55,18 @@ export function fetchAllProductsByFilter(filter, sort, pagination) {
     queryString += `${key}=${pagination[key]}&`;
   }
 
+  if (admin) {
+    queryString += `admin=true`;
+  }
+
   return new Promise(async (resolve) => {
     const response = await fetch(
       "http://localhost:8080/products?" + queryString
     );
     const productsData = await response.json();
-    resolve({ data: { products: productsData.data, totalItems: productsData.items } });
+    resolve({
+      data: { products: productsData.data, totalItems: productsData.items },
+    });
   });
 }
 
