@@ -14,7 +14,7 @@ export const fetchLoggedInUserOrdersrAsync = createAsyncThunk(
   "user/fetchLoggedInUserOrders",
   async (userId) => {
     const response = await fetchLoggedInUserOrders(userId);
-    return response.data;
+    return response;
   }
 );
 
@@ -66,7 +66,8 @@ export const userSlice = createSlice({
 
 // export const { resetOrder } = userSlice.actions;
 
-export const selectUserOrders = (state) => state.userInfo.orders;
+
+export const selectUserOrders = (state) => state.user.userInfo.orders;
 export const selectUserInfo = (state) => state.user.userInfo;
 
 export default userSlice.reducer;

@@ -8,7 +8,7 @@ function UserOrders() {
 
   return (
     <div>
-      {userOrders?.map((order) => (
+      {userOrders?.data?.map((order) => (
         <div
           key={order.id}
           className="mx-auto mt-12 bg-white max-w-7xl px-2 sm:px-2 lg:px-4"
