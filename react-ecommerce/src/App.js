@@ -20,6 +20,7 @@ import AdminProductDetailPage from "./pages/AdminProductDetailPage";
 import AdminProductFormPage from "./pages/AdminProductFormPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
 import RoleRedirect from "./features/auth/components/RoleRedirect";
+import { ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter([
   {
@@ -154,6 +155,7 @@ function App() {
       {/* <Home /> */}
       {/* <LoginPage /> */}
       <RouterProvider router={router} />
+      <ToastContainer />
     </div>
   );
 }

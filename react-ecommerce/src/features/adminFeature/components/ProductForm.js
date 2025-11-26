@@ -11,6 +11,7 @@ import {
 } from "../../productList/productSlice";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function ProductForm() {
   const {
@@ -59,6 +60,7 @@ function ProductForm() {
     updatedProductInfo.deleted = true;
 
     dispatch(updateProductAsync(updatedProductInfo));
+    toast.error("Product Deleted!");
   };
 
   const handleCancelButton = () => {
@@ -84,8 +86,10 @@ function ProductForm() {
             product.id = param.id;
             product.rating = selectProduct.rating || 0;
             dispatch(updateProductAsync(product));
+            toast.success("Product updated!");
           } else {
             dispatch(createProductAsync(product));
+            toast.success("Product created!");
             reset();
           }
         })}
