@@ -33,18 +33,10 @@ import {
 import { discountedPrice, ITEM_PER_PAGE } from "../../../app/constants";
 import PaginationComponent from "../../../common/PaginationComponent";
 
-
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
   { name: "Price: Low to High", sort: "price", order: "asc", current: false },
   { name: "Price: High to Low", sort: "price", order: "desc", current: false },
-];
-const subCategories = [
-  { name: "Totes", href: "#" },
-  { name: "Backpacks", href: "#" },
-  { name: "Travel Bags", href: "#" },
-  { name: "Hip Bags", href: "#" },
-  { name: "Laptop Sleeves", href: "#" },
 ];
 
 function classNames(...classes) {
@@ -90,7 +82,6 @@ export default function ProductList() {
       );
       newFilter[section.id].splice(index, 1);
     }
-    console.log("newFilter==>>", newFilter);
 
     setFilter(newFilter);
   };
@@ -413,7 +404,7 @@ function ProductGrid({ products }) {
                       <div className="mt-4 flex justify-between">
                         <div>
                           <h3 className="text-sm text-gray-700">
-                            <span href={product.thumbnail}>
+                            <span>
                               <span
                                 aria-hidden="true"
                                 className="absolute inset-0"

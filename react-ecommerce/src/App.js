@@ -75,7 +75,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "admin/product-detail/:id",
+    path: "/admin/product-detail/:id",
     element: (
       <ProtectedAdmin>
         <AdminProductDetailPage />
@@ -107,7 +107,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "order-success/:id",
+    path: "/order-success/:id",
     element: (
       <Protected>
         <OrderSuccess />
@@ -115,7 +115,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "orders",
+    path: "/orders",
     element: (
       <Protected>
         <UserOrdersPage />
@@ -123,7 +123,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "profile",
+    path: "/profile",
     element: (
       <Protected>
         <UserProfilePage />
@@ -154,6 +154,7 @@ function App() {
       dispatch(fetchLoggedInUserAsync());
     }
   }, [dispatch, user]);
+
   return (
     <div className="App">
       {/* <Home /> */}

@@ -14,12 +14,9 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCartByUserAsync, selectCartItems } from "../cart/cartSlice";
-import {
-  fetchLoggedInUserOrdersrAsync,
-  selectUserInfo,
-} from "../user/userSlice";
+import { useSelector } from "react-redux";
+import { selectCartItems } from "../cart/cartSlice";
+import { selectUserInfo } from "../user/userSlice";
 
 const navigation = [
   { name: "Products", link: "/", user: true },
@@ -38,13 +35,7 @@ function classNames(...classes) {
 }
 
 function Navbar({ children }) {
-  const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
-
-  useEffect(() => {
-    dispatch(fetchCartByUserAsync());
-  }, [dispatch]);
-
   const userInfo = useSelector(selectUserInfo);
 
   return (

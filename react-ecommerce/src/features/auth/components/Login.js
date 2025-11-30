@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   checkloggedInUserAsync,
@@ -12,6 +12,7 @@ function Login() {
   const user = useSelector(selectedLoggedInUser);
   const loginError = useSelector(errorLoggedInUser);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -19,9 +20,14 @@ function Login() {
     formState: { errors },
   } = useForm();
 
+  useEffect(() => {
+    if (user?.role && user.role === "admin") {
+      navigate("/admin");
+    }
+  }, [user]);
+
   return (
     <>
-      {user && <Navigate to="/" replace={true} />}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-white">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img

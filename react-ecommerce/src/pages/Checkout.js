@@ -7,16 +7,13 @@ import {
   updateCartItemAsync,
 } from "../features/cart/cartSlice";
 import { useForm } from "react-hook-form";
-import {
-  updateUserAsync,
-} from "../features/auth/authSlice";
+import { updateUserAsync } from "../features/auth/authSlice";
 import {
   createdOrderAsync,
   selectCurrentOrder,
 } from "../features/order/orderSlice";
 import { selectUserInfo } from "../features/user/userSlice";
 import { discountedPrice } from "../app/constants";
-
 
 export default function Checkout() {
   const [selectedAddress, setSelectedAddress] = useState(null);
