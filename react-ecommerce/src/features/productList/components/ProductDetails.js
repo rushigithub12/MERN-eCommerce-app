@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProductByIdAsync, selectedProductbyId } from "../productSlice";
 import { useParams } from "react-router-dom";
 import { addToCartAsync, selectCartItems } from "../../cart/cartSlice";
-import { selectedLoggedInUser } from "../../auth/authSlice";
 import { discountedPrice } from "../../../app/constants";
 
 const colors = [
@@ -37,7 +36,6 @@ export default function ProductDetails() {
   const dispatch = useDispatch();
 
   const product = useSelector(selectedProductbyId);
-  const user = useSelector(selectedLoggedInUser);
   const cartItems = useSelector(selectCartItems);
 
   const handleAddCart = (e) => {
@@ -45,8 +43,7 @@ export default function ProductDetails() {
     if (cartItems.findIndex((cart) => cart.product.id === product.id) < 0) {
       const newCartitem = {
         product: product.id,
-        quantity: 1,
-        user: user.id,
+        quantity: 1
       };
       delete newCartitem["id"];
       dispatch(addToCartAsync({ ...newCartitem }));

@@ -34,7 +34,6 @@ import {
   selectTotalItems,
 } from "../../productList/productSlice";
 import { discountedPrice, ITEM_PER_PAGE } from "../../../app/constants";
-import { selectedLoggedInUser } from "../../auth/authSlice";
 import { fetchCartByUserAsync } from "../../cart/cartSlice";
 import { fetchLoggedInUserAsync } from "../../user/userSlice";
 
@@ -91,12 +90,10 @@ export default function AdminProductList() {
   const brands = useSelector(selectProductBrands);
   const categories = useSelector(selectProductCategories);
 
-  const user = useSelector(selectedLoggedInUser);
-
   useEffect(() => {
-    dispatch(fetchCartByUserAsync(user?.id));
-    dispatch(fetchLoggedInUserAsync(user?.id));
-  }, [dispatch, user]);
+    dispatch(fetchCartByUserAsync());
+    dispatch(fetchLoggedInUserAsync());
+  }, [dispatch]);
 
   const filters = [
     {
@@ -153,7 +150,7 @@ export default function AdminProductList() {
   useEffect(() => {
     dispatch(fetchAllProductByBrandsAsync());
     dispatch(fetchAllProductByCategoriesAsync());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="bg-white">

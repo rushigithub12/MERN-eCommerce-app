@@ -4,7 +4,6 @@ import { Radio, RadioGroup } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { addToCartAsync } from "../../cart/cartSlice";
-import { selectedLoggedInUser } from "../../auth/authSlice";
 import {
   fetchProductByIdAsync,
   selectedProductbyId,
@@ -40,14 +39,12 @@ export default function AdminProductDetails() {
   const dispatch = useDispatch();
 
   const product = useSelector(selectedProductbyId);
-  const user = useSelector(selectedLoggedInUser);
 
   const handleAddCart = (e) => {
     e.preventDefault();
     const newCartitem = {
       product: product.id,
       quantity: 1,
-      user: user.id,
     };
     delete newCartitem["id"];
     dispatch(addToCartAsync({ ...newCartitem }));

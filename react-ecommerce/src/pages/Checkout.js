@@ -8,7 +8,6 @@ import {
 } from "../features/cart/cartSlice";
 import { useForm } from "react-hook-form";
 import {
-  selectedLoggedInUser,
   updateUserAsync,
 } from "../features/auth/authSlice";
 import {

@@ -3,7 +3,7 @@ import { checkLoggedInuser, createUser, signOut } from "./authAPI";
 import { updateUser } from "../user/userAPI";
 
 const initialState = {
-  loggedInuser: null,
+  loggedInuserToken: null,
   status: "idle",
   error: null,
 };
@@ -52,37 +52,39 @@ export const authSlice = createSlice({
       })
       .addCase(createUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.loggedInuser = action.payload;
+        state.loggedInuserToken = action.payload;
       })
       .addCase(checkloggedInUserAsync.pending, (state) => {
         state.status = "pending";
       })
       .addCase(checkloggedInUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.loggedInuser = action.payload;
+        state.loggedInuserToken = action.payload.user;
+        state.error = null;
       })
       .addCase(checkloggedInUserAsync.rejected, (state, action) => {
         state.status = "idle";
         state.error = action.payload;
+        state.loggedInuserToken = null;
       })
       .addCase(updateUserAsync.pending, (state) => {
         state.status = "pending";
       })
       .addCase(updateUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.loggedInuser = action.payload;
+        state.loggedInuserToken = action.payload;
       })
       .addCase(signOutAsync.pending, (state) => {
         state.status = "pending";
       })
       .addCase(signOutAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.loggedInuser = null;
+        state.loggedInuserToken = null;
       });
   },
 });
 
-export const selectedLoggedInUser = (state) => state?.auth?.loggedInuser;
+export const selectedLoggedInUser = (state) => state?.auth?.loggedInuserToken;
 export const errorLoggedInUser = (state) => state?.auth?.error;
 
 export default authSlice.reducer;

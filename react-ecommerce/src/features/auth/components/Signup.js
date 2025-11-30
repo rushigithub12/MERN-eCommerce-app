@@ -14,10 +14,6 @@ function Signup() {
   const dispatch = useDispatch();
   const user = useSelector(selectedLoggedInUser);
 
-  if (user) {
-    console.log("user==>>", user);
-  }
-
   return (
     <>
       {user && <Navigate to="/" replace={true} />}

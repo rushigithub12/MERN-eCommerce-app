@@ -28,14 +28,11 @@ import {
   fetchAllProductByFiltersAsync,
   selectProductBrands,
   selectProductCategories,
-  selectProducts,
   selectTotalItems,
 } from "../productSlice";
 import { discountedPrice, ITEM_PER_PAGE } from "../../../app/constants";
 import PaginationComponent from "../../../common/PaginationComponent";
-import { selectedLoggedInUser } from "../../auth/authSlice";
-import { fetchCartByUserAsync } from "../../cart/cartSlice";
-import { fetchLoggedInUserAsync } from "../../user/userSlice";
+
 
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
@@ -114,12 +111,12 @@ export default function ProductList() {
   useEffect(() => {
     const pagination = { _page: page, _per_page: ITEM_PER_PAGE };
     dispatch(fetchAllProductByFiltersAsync({ filter, sort, pagination }));
-  }, [filter, sort, page]);
+  }, [dispatch, filter, sort, page]);
 
   useEffect(() => {
     dispatch(fetchAllProductByBrandsAsync());
     dispatch(fetchAllProductByCategoriesAsync());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="bg-white">

@@ -16,8 +16,11 @@ import {
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCartByUserAsync, selectCartItems } from "../cart/cartSlice";
-import { fetchLoggedInUserOrdersrAsync, fetchLoggedInUserAsync, selectUserInfo } from "../user/userSlice";
-import { selectedLoggedInUser } from "../auth/authSlice";
+import {
+  fetchLoggedInUserOrdersrAsync,
+  fetchLoggedInUserAsync,
+  selectUserInfo,
+} from "../user/userSlice";
 
 const navigation = [
   { name: "Products", link: "/", user: true },
@@ -39,13 +42,11 @@ function Navbar({ children }) {
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
 
-  const user = useSelector(selectedLoggedInUser);
-
   useEffect(() => {
-    dispatch(fetchCartByUserAsync(user?.id));
-    dispatch(fetchLoggedInUserAsync(user?.id));
-     dispatch(fetchLoggedInUserOrdersrAsync(user?.id));
-  }, [dispatch, user]);
+    dispatch(fetchCartByUserAsync());
+    dispatch(fetchLoggedInUserAsync());
+    dispatch(fetchLoggedInUserOrdersrAsync());
+  }, [dispatch]);
 
   const userInfo = useSelector(selectUserInfo);
 
