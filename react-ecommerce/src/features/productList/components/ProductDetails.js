@@ -10,6 +10,7 @@ import {
 import { useParams } from "react-router-dom";
 import { addToCartAsync, selectCartItems } from "../../cart/cartSlice";
 import { discountedPrice } from "../../../app/constants";
+import { Grid } from "react-loader-spinner";
 
 const colors = [
   { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
