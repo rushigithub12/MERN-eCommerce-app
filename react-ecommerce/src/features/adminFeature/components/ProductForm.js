@@ -26,6 +26,7 @@ function ProductForm() {
 
   const param = useParams();
   const selectProduct = useSelector(selectedProductbyId);
+  console.log("selectProduct===>>", selectProduct)
 
   const dispatch = useDispatch();
 
@@ -99,7 +100,7 @@ function ProductForm() {
             <h2 className="text-base/7 font-semibold text-gray-900">
               Add Product
             </h2>
-            {selectProduct.deleted && (
+            {selectProduct && selectProduct.deleted && (
               <div className="text-red-400 font-semibold">Product Deleted</div>
             )}
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">

@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { Radio, RadioGroup } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductByIdAsync, selectedProductbyId } from "../productSlice";
+import {
+  fetchProductByIdAsync,
+  selectedProductbyId,
+  selectProductStatus,
+} from "../productSlice";
 import { useParams } from "react-router-dom";
 import { addToCartAsync, selectCartItems } from "../../cart/cartSlice";
 import { discountedPrice } from "../../../app/constants";
@@ -37,13 +41,14 @@ export default function ProductDetails() {
 
   const product = useSelector(selectedProductbyId);
   const cartItems = useSelector(selectCartItems);
+  const status = useSelector(selectProductStatus);
 
   const handleAddCart = (e) => {
     e.preventDefault();
     if (cartItems.findIndex((cart) => cart.product.id === product.id) < 0) {
       const newCartitem = {
         product: product.id,
-        quantity: 1
+        quantity: 1,
       };
       delete newCartitem["id"];
       dispatch(addToCartAsync({ ...newCartitem }));
@@ -58,6 +63,18 @@ export default function ProductDetails() {
 
   return (
     <div className="bg-white">
+      {status === "pending" ? (
+        <Grid
+          height="80"
+          width="80"
+          color="rgb(79, 70, 229) "
+          ariaLabel="grid-loading"
+          radius="12.5"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+      ) : null}
       {product && (
         <div className="pt-6">
           <nav aria-label="Breadcrumb">

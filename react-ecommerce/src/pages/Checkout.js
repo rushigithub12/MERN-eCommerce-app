@@ -17,24 +17,6 @@ import {
 import { selectUserInfo } from "../features/user/userSlice";
 import { discountedPrice } from "../app/constants";
 
-const addresses = [
-  {
-    name: "John Wick",
-    city: "Delhi",
-    street: "11th main",
-    pinCode: 411156,
-    state: "Delhi",
-    phone: 1535164651,
-  },
-  {
-    name: "James Bond",
-    city: "Mumbai",
-    street: "1st main",
-    pinCode: 41777799,
-    state: "Maharashtra",
-    phone: 783513656,
-  },
-];
 
 export default function Checkout() {
   const [selectedAddress, setSelectedAddress] = useState(null);

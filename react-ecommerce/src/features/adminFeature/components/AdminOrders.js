@@ -29,7 +29,6 @@ function AdminOrders() {
   };
 
   const handleEdit = (order) => {
-    console.log("handleEdit==>>", order);
     setEditableOrderId(order.id);
   };
 

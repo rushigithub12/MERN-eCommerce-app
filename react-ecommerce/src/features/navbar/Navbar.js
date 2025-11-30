@@ -18,7 +18,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCartByUserAsync, selectCartItems } from "../cart/cartSlice";
 import {
   fetchLoggedInUserOrdersrAsync,
-  fetchLoggedInUserAsync,
   selectUserInfo,
 } from "../user/userSlice";
 
@@ -44,8 +43,6 @@ function Navbar({ children }) {
 
   useEffect(() => {
     dispatch(fetchCartByUserAsync());
-    dispatch(fetchLoggedInUserAsync());
-    dispatch(fetchLoggedInUserOrdersrAsync());
   }, [dispatch]);
 
   const userInfo = useSelector(selectUserInfo);

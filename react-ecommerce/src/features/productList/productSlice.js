@@ -17,12 +17,15 @@ const initialState = {
   selectedProductbyId: null,
 };
 
-
-
 export const fetchAllProductByFiltersAsync = createAsyncThunk(
   "product/fetchAllProductsByFilter",
   async ({ filter, sort, pagination, admin }) => {
-    const response = await fetchAllProductsByFilter(filter, sort, pagination, admin);
+    const response = await fetchAllProductsByFilter(
+      filter,
+      sort,
+      pagination,
+      admin
+    );
     return response.data;
   }
 );
@@ -73,7 +76,7 @@ export const productSlice = createSlice({
   reducers: {
     clearSelectedProduct: (state) => {
       state.selectedProductbyId = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -134,5 +137,6 @@ export const selectTotalItems = (state) => state.product.totalItems;
 export const selectProductBrands = (state) => state.product.brands;
 export const selectProductCategories = (state) => state.product.categories;
 export const selectedProductbyId = (state) => state.product.selectedProductbyId;
+export const selectProductStatus = (state) => state.product.status;
 
 export default productSlice.reducer;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
@@ -19,20 +19,15 @@ import ProtectedAdmin from "./features/auth/components/ProtectedAdmin";
 import AdminProductDetailPage from "./pages/AdminProductDetailPage";
 import AdminProductFormPage from "./pages/AdminProductFormPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
-import RoleRedirect from "./features/auth/components/RoleRedirect";
 import { ToastContainer } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { selectedLoggedInUser } from "./features/auth/authSlice";
+import { fetchCartByUserAsync } from "./features/cart/cartSlice";
+import { fetchLoggedInUserAsync } from "./features/user/userSlice";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <Protected>
-        <RoleRedirect />
-      </Protected>
-    ),
-  },
-  {
-    path: "/home",
     element: (
       <Protected>
         <Home />
@@ -48,15 +43,15 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "login",
+    path: "/login",
     element: <LoginPage />,
   },
   {
-    path: "signup",
+    path: "/signup",
     element: <SignupPage />,
   },
   {
-    path: "cart",
+    path: "/cart",
     element: (
       <Protected>
         <Cart />
@@ -64,7 +59,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "checkout",
+    path: "/checkout",
     element: (
       <Protected>
         <Checkout />
@@ -72,7 +67,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "home/product-detail/:id",
+    path: "/product-detail/:id",
     element: (
       <Protected>
         <ProductDetailPage />
@@ -136,11 +131,11 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "logout",
+    path: "/logout",
     element: <Logout />,
   },
   {
-    path: "forgot-password",
+    path: "/forgot-password",
     element: <ForgotPasswordPage />,
   },
   {
@@ -150,11 +145,19 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const dispatch = useDispatch();
+  const user = useSelector(selectedLoggedInUser);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchCartByUserAsync());
+      dispatch(fetchLoggedInUserAsync());
+    }
+  }, [dispatch, user]);
   return (
     <div className="App">
       {/* <Home /> */}
-      {/* <LoginPage /> */}
-      <RouterProvider router={router} />
+      {/* <LoginPage /> */ <RouterProvider router={router} />}
       <ToastContainer />
     </div>
   );
