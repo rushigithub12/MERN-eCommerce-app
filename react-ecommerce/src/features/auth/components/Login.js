@@ -21,8 +21,12 @@ function Login() {
   } = useForm();
 
   useEffect(() => {
+    if (!user) return;
+
     if (user?.role && user.role === "admin") {
       navigate("/admin");
+    } else {
+      navigate("/");
     }
   }, [user]);
 
