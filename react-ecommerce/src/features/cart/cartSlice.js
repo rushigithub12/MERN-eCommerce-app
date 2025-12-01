@@ -10,6 +10,7 @@ import {
 const initialState = {
   items: [],
   status: "idle",
+  cartLoaded: false,
 };
 
 // export const incrementAsync = createAsyncThunk(
@@ -79,6 +80,11 @@ export const cartSlice = createSlice({
       .addCase(fetchCartByUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.items = action.payload;
+        state.cartLoaded = true;
+      })
+      .addCase(fetchCartByUserAsync.rejected, (state, action) => {
+        state.status = "idle";
+        state.cartLoaded = true;
       })
       .addCase(updateCartItemAsync.pending, (state) => {
         state.status = "pending";
@@ -113,5 +119,6 @@ export const cartSlice = createSlice({
 
 export const selectCartItems = (state) => state.cart.items;
 export const selectCartStatus = (state) => state.cart.status;
+export const selectCartLoaded = (state) => state.cart.cartLoaded;
 
 export default cartSlice.reducer;

@@ -117,7 +117,9 @@ function Login() {
                   <p className="text-red-500">{errors?.password?.message}</p>
                 )}
                 {loginError && (
-                  <p className="text-red-500">{loginError?.message}</p>
+                  <p className="text-red-500">
+                    {loginError || loginError?.message}
+                  </p>
                 )}
               </div>
             </div>

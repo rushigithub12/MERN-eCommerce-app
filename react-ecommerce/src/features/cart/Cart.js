@@ -6,6 +6,7 @@ import AlertModal from "../../common/AlertModal";
 import {
   removeItemFromCartAsync,
   selectCartItems,
+  selectCartLoaded,
   updateCartItemAsync,
 } from "./cartSlice";
 
@@ -13,6 +14,7 @@ export function Cart() {
   const [openModal, setOpenModal] = useState(null);
 
   const dispatch = useDispatch();
+  const isCartLoaded = useSelector(selectCartLoaded);
 
   const cartItems = useSelector(selectCartItems);
   const totalAmount = cartItems?.reduce(
@@ -34,7 +36,7 @@ export function Cart() {
 
   return (
     <>
-      {!cartItems.length && <Navigate to="/" replace={true} />}
+      {isCartLoaded && !cartItems.length && <Navigate to="/" replace={true} />}
       <div className="mx-auto mt-12 bg-white max-w-7xl px-2 sm:px-2 lg:px-4">
         <div className="border-t border-gray-200 px-0 py-6 sm:px-0">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">

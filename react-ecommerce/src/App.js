@@ -21,7 +21,11 @@ import AdminProductFormPage from "./pages/AdminProductFormPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
 import { ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { selectedLoggedInUser } from "./features/auth/authSlice";
+import {
+  checkAuthUserAsync,
+  selectedLoggedInUser,
+  selectUserChecked,
+} from "./features/auth/authSlice";
 import { fetchCartByUserAsync } from "./features/cart/cartSlice";
 import { fetchLoggedInUserAsync } from "./features/user/userSlice";
 
@@ -147,6 +151,11 @@ const router = createBrowserRouter([
 function App() {
   const dispatch = useDispatch();
   const user = useSelector(selectedLoggedInUser);
+  const userChecked = useSelector(selectUserChecked);
+
+  useEffect(() => {
+    dispatch(checkAuthUserAsync());
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -158,7 +167,8 @@ function App() {
   return (
     <div className="App">
       {/* <Home /> */}
-      {/* <LoginPage /> */ <RouterProvider router={router} />}
+      {/* <LoginPage /> */}
+      {userChecked && <RouterProvider router={router} />}
       <ToastContainer />
     </div>
   );

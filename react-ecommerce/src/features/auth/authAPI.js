@@ -27,7 +27,24 @@ export function checkLoggedInuser(loginInfo) {
         const data = await response.json();
         resolve({ data });
       } else {
-        const error = await response.json();
+        const error = await response.text();
+        reject(error);
+      }
+    } catch (err) {
+      reject({ err });
+    }
+  });
+}
+
+export function checkAuthUser() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch("http://localhost:8080/auth/checkAuth");
+      if (response.ok) {
+        const data = await response.json();
+        resolve({ data });
+      } else {
+        const error = await response.text();
         reject(error);
       }
     } catch (err) {
