@@ -28,6 +28,9 @@ import {
 } from "./features/auth/authSlice";
 import { fetchCartByUserAsync } from "./features/cart/cartSlice";
 import { fetchLoggedInUserAsync } from "./features/user/userSlice";
+import StripeCheckOut from "./pages/StripeCheckOut";
+import CheckoutForm from "./pages/CheckoutForm";
+import CompletePage from "./pages/CompletePage";
 
 const router = createBrowserRouter([
   {
@@ -131,6 +134,34 @@ const router = createBrowserRouter([
     element: (
       <Protected>
         <UserProfilePage />
+      </Protected>
+    ),
+  },
+  {
+    path: "/stripe-checkout",
+    element: (
+      <Protected>
+        <StripeCheckOut />
+      </Protected>
+    ),
+  },
+  {
+    path: "/stripe-checkout/checkout",
+    element: (
+      <Protected>
+        <StripeCheckOut>
+          <CheckoutForm />
+        </StripeCheckOut>
+      </Protected>
+    ),
+  },
+  {
+    path: "/stripe-checkout/complete",
+    element: (
+      <Protected>
+        <StripeCheckOut>
+          <CompletePage />
+        </StripeCheckOut>
       </Protected>
     ),
   },

@@ -6,6 +6,8 @@
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.5",
     "@reduxjs/toolkit": "^1.9.7",
+    "@stripe/react-stripe-js": "^5.4.1",
+    "@stripe/stripe-js": "^8.5.3",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.7",
     "@testing-library/jest-dom": "^5.17.0",
@@ -21,6 +23,7 @@
     "react-router-dom": "^6.25.1",
     "react-scripts": "5.0.1",
     "react-toastify": "^11.0.5",
+    "stripe": "^18.0.0",
     "tailwindcss": "^3.4.6",
     "web-vitals": "^2.1.4"
   },
