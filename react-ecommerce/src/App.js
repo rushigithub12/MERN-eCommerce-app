@@ -106,7 +106,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/orders",
+    path: "/admin/ordersPage",
     element: (
       <ProtectedAdmin>
         <AdminOrdersPage />
@@ -122,7 +122,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/orders",
+    path: "/ordersPage",
     element: (
       <Protected>
         <UserOrdersPage />

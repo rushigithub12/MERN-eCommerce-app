@@ -1,61 +1,32 @@
-// A mock function to mimic making an async request for data
+import { api } from "../../api/apiClient";
+
 export function createUser(userData) {
-  return new Promise(async (resolve) => {
-    const response = await fetch("/auth/signup", {
-      method: "POST",
-      body: JSON.stringify(userData),
-      headers: {
-        "content-type": "application/json",
-      },
+  return api
+    .post("/auth/signup", userData)
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Signup failed");
     });
-    const data = await response.json();
-    resolve({ data });
-  });
 }
 
 export function checkLoggedInuser(loginInfo) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const response = await fetch("/auth/login", {
-        method: "POST",
-        body: JSON.stringify(loginInfo),
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        resolve({ data });
-      } else {
-        const error = await response.text();
-        reject(error);
-      }
-    } catch (err) {
-      reject({ err });
-    }
-  });
+  return api
+    .post("/auth/login", loginInfo)
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Login failed");
+    });
 }
 
 export function checkAuthUser() {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const response = await fetch("/auth/checkAuth");
-      if (response.ok) {
-        const data = await response.json();
-        resolve({ data });
-      } else {
-        const error = await response.text();
-        reject(error);
-      }
-    } catch (err) {
-      reject({ err });
-    }
-  });
+  return api
+    .get("/auth/checkAuth")
+    .then((data) => ({ data }))
+    .catch((error) => {
+      return { data: null };
+    });
 }
 
 export function signOut(userId) {
-  return new Promise(async (resolve) => {
-    //Todo: remove user from session
-    resolve({ data: "Succesfully logged out!" });
-  });
+  return Promise.resolve({ data: "Successfully logged out!" });
 }

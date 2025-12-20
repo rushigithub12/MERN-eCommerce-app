@@ -4,38 +4,41 @@ import { Elements } from "@stripe/react-stripe-js";
 import "../Stripe.css";
 import { useSelector } from "react-redux";
 import { selectCurrentOrder } from "../features/order/orderSlice";
+import { axiosInstance } from "../api/apiClient";
 
-// Make sure to call loadStripe outside of a component’s render to avoid
-// recreating the Stripe object on every render.
-// This is your test publishable API key.
-const stripePromise = loadStripe(
-  "pk_test_51SaJjnLFLV1W6TyF1LqwFZzOXIrcvacKrhb7Mk3kh0USG8xN8Wqqi05gw17bi8MxIZZLL7K6EyCZ6B08fcDdL7P500cG9VeQ7F"
-);
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 export default function StripeCheckOut({ children }) {
   const [clientSecret, setClientSecret] = useState("");
+  const [error, setError] = useState("");
   const currentOrder = useSelector(selectCurrentOrder);
 
   useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
-    fetch("/create-payment-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ totalAmount: currentOrder.totalAmount }),
-      meta: {
-        order_id: currentOrder.id //order info from stripe to webhook
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setClientSecret(data.clientSecret);
-      });
-  }, []);
+    if (currentOrder?.totalAmount && currentOrder?.orderId) {
+      axiosInstance
+        .post("/create-payment-intent", {
+          totalAmount: currentOrder.totalAmount,
+          orderId: currentOrder.orderId,
+        })
+        .then((response) => {
+          setClientSecret(response.data.clientSecret);
+          setError("");
+        })
+        .catch((err) => {
+          const errorMessage =
+            err.response?.data?.message ||
+            err.message ||
+            "Failed to create payment intent";
+          setError(errorMessage);
+          console.error("Payment intent error:", errorMessage);
+        });
+    }
+  }, [currentOrder?.totalAmount, currentOrder?.orderId]);
 
   const appearance = {
     theme: "stripe",
   };
-  // Enable the skeleton loader UI for optimal loading.
+
   const loader = "auto";
 
   return (

@@ -1,32 +1,18 @@
-export function fetchLoggedInUser() {
-  return new Promise(async (resolve) => {
-    const response = await fetch("/users/own");
-    const data = response.json();
-    resolve({ data });
-  });
+import { api } from "../../api/apiClient";
+
+export async function fetchLoggedInUser() {
+  return api.get("/users/own");
 }
 
-export function fetchLoggedInUserOrders() {
-  return new Promise(async (resolve) => {
-    const response = await fetch("/orders/own");
-    const data = await response.json();
-    resolve({ data });
-  });
+export async function fetchLoggedInUserOrders() {
+  return api.get("/orders/own");
 }
 
-export function updateUser(updatedUser) {
-  return new Promise(async (resolve) => {
-    const response = await fetch(
-      "/users/" + updatedUser.id,
-      {
-        method: "PATCH",
-        body: JSON.stringify(updatedUser),
-        headers: {
-          "content-type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
-    resolve({ data });
-  });
+export async function updateUser(updatedUser) {
+  return api
+    .patch(`/users/${updatedUser.id}`, updatedUser)
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to update user");
+    });
 }
