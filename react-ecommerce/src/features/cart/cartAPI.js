@@ -20,7 +20,7 @@ export async function fetchCartByUser() {
 
 export async function updateCartItem(updatedItem) {
   return api
-    .put(`/cart/${updatedItem?.id}`, updatedItem)
+    .patch(`/cart/${updatedItem?.id}`, updatedItem)
     .then((data) => ({ data }))
     .catch((error) => {
       throw new Error(error.message || "Failed to update cart item");
@@ -40,7 +40,7 @@ export async function resetCart(userId) {
   try {
     const cartResponse = await fetchCartByUser();
     const cartsData = cartResponse.data || [];
-  
+
     for (const cart of cartsData) {
       try {
         await removeItemFromCart(cart.id);
@@ -48,7 +48,7 @@ export async function resetCart(userId) {
         console.error(`Failed to remove cart item ${cart.id}:`, error);
       }
     }
-    
+
     return { status: "success" };
   } catch (error) {
     throw new Error(error.message || "Failed to reset cart");

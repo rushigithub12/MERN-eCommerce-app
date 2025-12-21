@@ -14,7 +14,7 @@ export const fetchLoggedInUserOrdersrAsync = createAsyncThunk(
   "user/fetchLoggedInUserOrders",
   async () => {
     const response = await fetchLoggedInUserOrders();
-    return response;
+    return response.data;
   }
 );
 

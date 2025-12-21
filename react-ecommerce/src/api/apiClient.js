@@ -1,18 +1,35 @@
 import axios from "axios";
 
-// Get API base URL from environment or use default
-const apiUrl =
-  process.env.REACT_APP_API_URL || "http://localhost:8080";
+const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8080";
 
 export const API_BASE_URL = apiUrl;
 
+const paramsSerializer = (params) => {
+  const searchParams = new URLSearchParams();
+
+  const appendParam = (key, value) => {
+    if (Array.isArray(value)) {
+      value.forEach((v) => searchParams.append(key, v));
+    } else if (value !== null && value !== undefined) {
+      searchParams.append(key, value);
+    }
+  };
+
+  Object.keys(params).forEach((key) => {
+    appendParam(key, params[key]);
+  });
+
+  return searchParams.toString();
+};
+
 export const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: apiUrl,
   timeout: 30000,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
+  paramsSerializer,
 });
 
 axiosInstance.interceptors.response.use(

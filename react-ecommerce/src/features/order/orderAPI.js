@@ -20,7 +20,7 @@ export async function fetchAllOrders(sort = {}, pagination = {}) {
       .get("/orders", { params })
       .then((data) => ({
         data: {
-          orders: data.data || [],
+          orders: Array.isArray(data) ? data : data.orders || data.data || [],
           totalOrders: data.items || data.total || 0,
         },
       }))

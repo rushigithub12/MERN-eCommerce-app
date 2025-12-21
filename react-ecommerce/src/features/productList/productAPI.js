@@ -59,7 +59,9 @@ export async function fetchAllProductsByFilter(
       .get("/products", { params })
       .then((data) => ({
         data: {
-          products: data.data || [],
+          products: Array.isArray(data)
+            ? data
+            : data.products || data.data || [],
           totalItems: data.items || data.total || 0,
         },
       }))

@@ -19,14 +19,20 @@ function UserProfile() {
   const [showAddressForm, setShowAddressForm] = useState(false);
 
   const handleEdit = (updatedAddress, indx) => {
-    const newUser = { ...userInfo, addresses: [...userInfo.addresses] };
+    const newUser = {
+      id: userInfo.id,
+      addresses: [...userInfo.addresses],
+    };
     newUser.addresses?.splice(indx, 1, updatedAddress);
     dispatch(updateUserAsync(newUser));
     setSelectedIndex(-1);
   };
 
   const removeAddress = (e, ind) => {
-    const newUser = { ...userInfo, addresses: [...userInfo.addresses] };
+    const newUser = {
+      id: userInfo.id,
+      addresses: [...userInfo.addresses],
+    };
     newUser.addresses?.splice(ind, 1);
     dispatch(updateUserAsync(newUser));
   };
@@ -47,7 +53,7 @@ function UserProfile() {
 
   const handleAdd = (newAddress) => {
     const newUser = {
-      ...userInfo,
+      id: userInfo.id,
       addresses: [...userInfo.addresses, newAddress],
     };
     dispatch(updateUserAsync(newUser));

@@ -91,7 +91,7 @@ export default function Checkout() {
               onSubmit={handleSubmit((data) => {
                 dispatch(
                   updateUserAsync({
-                    ...user,
+                    id: user.id,
                     addresses: [...user.addresses, data],
                   })
                 );

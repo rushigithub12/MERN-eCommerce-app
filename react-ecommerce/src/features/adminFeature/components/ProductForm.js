@@ -26,7 +26,6 @@ function ProductForm() {
 
   const param = useParams();
   const selectProduct = useSelector(selectedProductbyId);
-  console.log("selectProduct===>>", selectProduct)
 
   const dispatch = useDispatch();
 

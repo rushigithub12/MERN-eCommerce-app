@@ -89,7 +89,6 @@ export default function AdminProductList() {
 
   const handleSort = (e, option) => {
     const sort = { _sort: option.sort, _order: option.order };
-    console.log({ sort });
     setSort(sort);
   };
 
