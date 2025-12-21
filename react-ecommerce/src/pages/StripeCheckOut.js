@@ -14,11 +14,13 @@ export default function StripeCheckOut({ children }) {
   const currentOrder = useSelector(selectCurrentOrder);
 
   useEffect(() => {
-    if (currentOrder?.totalAmount && currentOrder?.orderId) {
+    if (currentOrder?.totalAmount) {
       axiosInstance
         .post("/create-payment-intent", {
           totalAmount: currentOrder.totalAmount,
-          orderId: currentOrder.orderId,
+          meta: {
+            order_id: currentOrder.id,
+          },
         })
         .then((response) => {
           setClientSecret(response.data.clientSecret);
@@ -33,7 +35,7 @@ export default function StripeCheckOut({ children }) {
           console.error("Payment intent error:", errorMessage);
         });
     }
-  }, [currentOrder?.totalAmount, currentOrder?.orderId]);
+  }, [currentOrder?.totalAmount]);
 
   const appearance = {
     theme: "stripe",
