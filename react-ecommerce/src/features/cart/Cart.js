@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
-import Modal from "react-modal";
+import { discountedPrice } from "../../app/constants";
+import AlertModal from "../../common/AlertModal";
 import {
   removeItemFromCartAsync,
   selectCartItems,
+  selectCartLoaded,
   updateCartItemAsync,
 } from "./cartSlice";
 import { discountedPrice } from "../../app/constants";
@@ -13,15 +15,14 @@ import AlertModal from "../../common/AlertModal";
 Modal.setAppElement("#root"); // Required for accessibility
 
 export function Cart() {
-  const [open, setOpen] = useState(true);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [openModal, setOpenModal] = useState(null);
 
   const dispatch = useDispatch();
+  const isCartLoaded = useSelector(selectCartLoaded);
 
   const cartItems = useSelector(selectCartItems);
   const totalAmount = cartItems?.reduce(
-    (amount, item) => discountedPrice(item) * item.quantity + amount,
+    (amount, item) => discountedPrice(item.product) * item.quantity + amount,
     0
   );
   const totalitems = cartItems?.reduce(
@@ -30,29 +31,16 @@ export function Cart() {
   );
 
   const handleQuantity = (e, item) => {
-    dispatch(updateCartItemAsync({ ...item, quantity: +e.target.value }));
+    dispatch(updateCartItemAsync({ id: item.id, quantity: +e.target.value }));
   };
 
-  const openModal = (item) => {
-    setSelectedItem(item);
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-    setSelectedItem(null);
-  };
-
-  const confirmRemoveItem = () => {
-    if (selectedItem) {
-      dispatch(removeItemFromCartAsync(selectedItem.id));
-    }
-    closeModal();
+  const handleRemove = (e, id) => {
+    dispatch(removeItemFromCartAsync(id));
   };
 
   return (
     <>
-      {!cartItems.length && <Navigate to="/" replace={true} />}
+      {isCartLoaded && !cartItems.length && <Navigate to="/" replace={true} />}
       <div className="mx-auto mt-12 bg-white max-w-7xl px-2 sm:px-2 lg:px-4">
         <div className="border-t border-gray-200 px-0 py-6 sm:px-0">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
@@ -65,8 +53,8 @@ export function Cart() {
                   <li key={item.id} className="flex py-6">
                     <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                       <img
-                        alt={item.title}
-                        src={item.thumbnail}
+                        alt={item.product.title}
+                        src={item.product.thumbnail}
                         className="h-full w-full object-cover object-center"
                       />
                     </div>
@@ -75,12 +63,14 @@ export function Cart() {
                       <div>
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <h3>
-                            <a href={item.href}>{item.title}</a>
+                            <a href={item.href}>{item.product.title}</a>
                           </h3>
-                          <p className="ml-4">${item.price}</p>
+                          <p className="ml-4">
+                            ${discountedPrice(item.product)}
+                          </p>
                         </div>
                         <p className="mt-1 text-sm text-gray-500">
-                          {item.brand}
+                          {item.product.brand}
                         </p>
                       </div>
                       <div className="flex flex-1 items-end justify-between text-sm">
@@ -104,10 +94,22 @@ export function Cart() {
                           </select>
                         </div>
                         <div className="flex">
+                          <AlertModal
+                            title={`Delete ${item.product.title}`}
+                            message="Are you sure you want to delete this Cart item ?"
+                            dangerOption="Delete"
+                            cancelOption="Cancel"
+                            onConfirm={(e) => handleRemove(e, item.id)}
+                            onClose={() => setOpenModal(null)}
+                            isOpen={openModal === item.id}
+                            type="error"
+                          />
                           <button
                             type="button"
                             className="font-medium text-indigo-600 hover:text-indigo-500"
-                            onClick={() => openModal(item)}
+                            onClick={(e) => {
+                              setOpenModal(item.id);
+                            }}
                           >
                             Remove
                           </button>
@@ -153,7 +155,6 @@ export function Cart() {
                 <Link to="/">
                   <button
                     type="button"
-                    onClick={() => setOpen(false)}
                     className="font-medium text-indigo-600 hover:text-indigo-500"
                   >
                     Continue Shopping

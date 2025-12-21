@@ -7,35 +7,13 @@ import {
   updateCartItemAsync,
 } from "../features/cart/cartSlice";
 import { useForm } from "react-hook-form";
-import {
-  selectedLoggedInUser,
-  updateUserAsync,
-} from "../features/auth/authSlice";
+import { updateUserAsync } from "../features/auth/authSlice";
 import {
   createdOrderAsync,
   selectCurrentOrder,
 } from "../features/order/orderSlice";
 import { selectUserInfo } from "../features/user/userSlice";
 import { discountedPrice } from "../app/constants";
-
-const addresses = [
-  {
-    name: "John Wick",
-    city: "Delhi",
-    street: "11th main",
-    pinCode: 411156,
-    state: "Delhi",
-    phone: 1535164651,
-  },
-  {
-    name: "James Bond",
-    city: "Mumbai",
-    street: "1st main",
-    pinCode: 41777799,
-    state: "Maharashtra",
-    phone: 783513656,
-  },
-];
 
 export default function Checkout() {
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -55,7 +33,7 @@ export default function Checkout() {
 
   const cartItems = useSelector(selectCartItems);
   const totalAmount = cartItems?.reduce(
-    (amount, item) => discountedPrice(item) * item.quantity + amount,
+    (amount, item) => item.price * item.quantity + amount,
     0
   );
   const totalitems = cartItems?.reduce(
@@ -64,7 +42,7 @@ export default function Checkout() {
   );
 
   const handleQuantity = (e, item) => {
-    dispatch(updateCartItemAsync({ ...item, quantity: +e.target.value }));
+    dispatch(updateCartItemAsync({ id: item.id, quantity: +e.target.value }));
   };
 
   const removeItemFromCart = (e, item) => {
@@ -83,7 +61,7 @@ export default function Checkout() {
     if (selectedAddress && paymentMethod) {
       const order = {
         cartItems,
-        user,
+        user: user.id,
         totalAmount,
         totalitems,
         paymentMethod,
@@ -99,8 +77,11 @@ export default function Checkout() {
   return (
     <>
       {!cartItems.length && <Navigate to="/" replace={true} />}
-      {currentOrder && currentOrder.id && (
+      {currentOrder && currentOrder.paymentMethod === "cash" && (
         <Navigate to={`/order-success/${currentOrder.id}`} replace={true} />
+      )}
+      {currentOrder && currentOrder.paymentMethod === "card" && (
+        <Navigate to={`/stripe-checkout/checkout`} replace={true} />
       )}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
@@ -110,7 +91,7 @@ export default function Checkout() {
               onSubmit={handleSubmit((data) => {
                 dispatch(
                   updateUserAsync({
-                    ...user,
+                    id: user.id,
                     addresses: [...user.addresses, data],
                   })
                 );
@@ -402,12 +383,12 @@ export default function Checkout() {
                 </h1>
                 <div className="flow-root">
                   <ul role="list" className="-my-6 divide-y divide-gray-200">
-                    {cartItems.map((item) => (
+                    {cartItems?.map((item) => (
                       <li key={item.id} className="flex py-6">
                         <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                           <img
-                            src={item.thumbnail}
-                            alt={item.title}
+                            src={item.product.thumbnail}
+                            alt={item.product.title}
                             className="h-full w-full object-cover object-center"
                           />
                         </div>
@@ -416,12 +397,14 @@ export default function Checkout() {
                           <div>
                             <div className="flex justify-between text-base font-medium text-gray-900">
                               <h3>
-                                <a href={item.id}>{item.title}</a>
+                                <a href={item.product.id}>
+                                  {item.product.title}
+                                </a>
                               </h3>
-                              <p className="ml-4">${discountedPrice(item)}</p>
+                              <p className="ml-4">${item.price}</p>
                             </div>
                             <p className="mt-1 text-sm text-gray-500">
-                              {item.brand}
+                              {item.product.brand}
                             </p>
                           </div>
                           <div className="flex flex-1 items-end justify-between text-sm">

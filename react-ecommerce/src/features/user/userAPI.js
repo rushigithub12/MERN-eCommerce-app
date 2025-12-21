@@ -1,34 +1,28 @@
-export function fetchLoggedInUser(userId) {
-  return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/users/" + userId);
-    const data = response.json();
-    resolve({ data });
-  });
+import { api } from "../../api/apiClient";
+
+export async function fetchLoggedInUser() {
+  return api
+    .get("/users/own")
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to fetch user");
+    });
 }
 
-export function fetchLoggedInUserOrders(userId) {
-  return new Promise(async (resolve) => {
-    const response = await fetch(
-      "http://localhost:8080/orders?user.id=" + userId
-    );
-    const data = await response.json();
-    resolve({ data });
-  });
+export async function fetchLoggedInUserOrders() {
+  return api
+    .get("/orders/own")
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to fetch user orders");
+    });
 }
 
-export function updateUser(updatedUser) {
-  return new Promise(async (resolve) => {
-    const response = await fetch(
-      "http://localhost:8080/users/" + updatedUser.id,
-      {
-        method: "PATCH",
-        body: JSON.stringify(updatedUser),
-        headers: {
-          "content-type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
-    resolve({ data });
-  });
+export async function updateUser(updatedUser) {
+  return api
+    .patch(`/users/${updatedUser.id}`, updatedUser)
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to update user");
+    });
 }

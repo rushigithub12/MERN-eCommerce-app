@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 
 function UserProfile() {
   const dispatch = useDispatch();
-  const user = useSelector(selectUserInfo);
+  const userInfo = useSelector(selectUserInfo);
   const {
     register,
     handleSubmit,
@@ -19,14 +19,20 @@ function UserProfile() {
   const [showAddressForm, setShowAddressForm] = useState(false);
 
   const handleEdit = (updatedAddress, indx) => {
-    const newUser = { ...user, addresses: [...user.addresses] };
+    const newUser = {
+      id: userInfo.id,
+      addresses: [...userInfo.addresses],
+    };
     newUser.addresses?.splice(indx, 1, updatedAddress);
     dispatch(updateUserAsync(newUser));
     setSelectedIndex(-1);
   };
 
   const removeAddress = (e, ind) => {
-    const newUser = { ...user, addresses: [...user.addresses] };
+    const newUser = {
+      id: userInfo.id,
+      addresses: [...userInfo.addresses],
+    };
     newUser.addresses?.splice(ind, 1);
     dispatch(updateUserAsync(newUser));
   };
@@ -34,7 +40,7 @@ function UserProfile() {
   const handleEditForm = (ind) => {
     setSelectedIndex(ind);
 
-    const address = user?.addresses[ind];
+    const address = userInfo?.addresses[ind];
 
     setValue("name", address?.name);
     setValue("email", address.email);
@@ -46,7 +52,10 @@ function UserProfile() {
   };
 
   const handleAdd = (newAddress) => {
-    const newUser = { ...user, addresses: [...user.addresses, newAddress] };
+    const newUser = {
+      id: userInfo.id,
+      addresses: [...userInfo.addresses, newAddress],
+    };
     dispatch(updateUserAsync(newUser));
     setShowAddressForm(false);
     setSelectedIndex(-1);
@@ -57,15 +66,16 @@ function UserProfile() {
       <div className="mx-auto mt-12 bg-white max-w-7xl px-2 sm:px-2 lg:px-4">
         <div className="border-t border-gray-200 px-0 py-6 sm:px-0">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Name: {user?.name ? user?.name : "Guest"}
+            Name: {userInfo?.name ? userInfo?.name : "Guest"}
           </h1>
           <h3 className="text-xl font-bold tracking-tight text-red-900">
-            Email address: {user?.email ? user?.email : "user.guest@email.com"}
+            Email address:{" "}
+            {userInfo?.email ? userInfo?.email : "user.guest@email.com"}
           </h3>
 
-          {user.role === "admin" && (
+          {userInfo.role === "admin" && (
             <h3 className="text-xl font-bold tracking-tight text-red-900">
-              Role: {user.role}
+              Role: {userInfo.role}
             </h3>
           )}
 
@@ -238,7 +248,7 @@ function UserProfile() {
                               type="submit"
                               className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
-                              Addd Address
+                              Add Address
                             </button>
                           </div>
                         </div>
@@ -249,7 +259,7 @@ function UserProfile() {
               ) : null}
             </div>
             <p className="mt-0.5 text-sm text-gray-500">Your Addresses:</p>
-            {user.addresses?.map((address, ind) => (
+            {userInfo.addresses?.map((address, ind) => (
               <div key={ind}>
                 <div className="lg:col-span-3">
                   {selectedEditIndex === ind ? (

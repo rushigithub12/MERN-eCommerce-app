@@ -3,22 +3,15 @@ import "./App.css";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Cart } from "./features/cart/Cart";
 import Checkout from "./pages/Checkout";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import Protected from "./features/auth/components/Protected";
-import { useDispatch, useSelector } from "react-redux";
-import { selectedLoggedInUser } from "./features/auth/authSlice";
-import { fetchCartByUserAsync } from "./features/cart/cartSlice";
 import PageNotFound from "./pages/404";
 import OrderSuccess from "./pages/OrderSuccess";
 import UserOrdersPage from "./pages/UserOrdersPage";
 import UserProfilePage from "./pages/UserProfilePage";
-import { fetchLoggedInUserAsync } from "./features/user/userSlice";
 import Logout from "./features/auth/components/Logout";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import AdminHome from "./pages/AdminHome";
@@ -26,6 +19,18 @@ import ProtectedAdmin from "./features/auth/components/ProtectedAdmin";
 import AdminProductDetailPage from "./pages/AdminProductDetailPage";
 import AdminProductFormPage from "./pages/AdminProductFormPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
+import { ToastContainer } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  checkAuthUserAsync,
+  selectedLoggedInUser,
+  selectUserChecked,
+} from "./features/auth/authSlice";
+import { fetchCartByUserAsync } from "./features/cart/cartSlice";
+import { fetchLoggedInUserAsync } from "./features/user/userSlice";
+import StripeCheckOut from "./pages/StripeCheckOut";
+import CheckoutForm from "./pages/CheckoutForm";
+import CompletePage from "./pages/CompletePage";
 
 const router = createBrowserRouter([
   {
@@ -45,15 +50,15 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "login",
+    path: "/login",
     element: <LoginPage />,
   },
   {
-    path: "signup",
+    path: "/signup",
     element: <SignupPage />,
   },
   {
-    path: "cart",
+    path: "/cart",
     element: (
       <Protected>
         <Cart />
@@ -61,7 +66,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "checkout",
+    path: "/checkout",
     element: (
       <Protected>
         <Checkout />
@@ -69,7 +74,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "product-detail/:id",
+    path: "/product-detail/:id",
     element: (
       <Protected>
         <ProductDetailPage />
@@ -109,7 +114,31 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "order-success/:id",
+    path: "/admin/product-form",
+    element: (
+      <ProtectedAdmin>
+        <AdminProductFormPage />
+      </ProtectedAdmin>
+    ),
+  },
+  {
+    path: "/admin/product-form/:id",
+    element: (
+      <ProtectedAdmin>
+        <AdminProductFormPage />
+      </ProtectedAdmin>
+    ),
+  },
+  {
+    path: "/admin/ordersPage",
+    element: (
+      <ProtectedAdmin>
+        <AdminOrdersPage />
+      </ProtectedAdmin>
+    ),
+  },
+  {
+    path: "/order-success/:id",
     element: (
       <Protected>
         <OrderSuccess />
@@ -117,7 +146,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "orders",
+    path: "/ordersPage",
     element: (
       <Protected>
         <UserOrdersPage />
@@ -125,7 +154,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "profile",
+    path: "/profile",
     element: (
       <Protected>
         <UserProfilePage />
@@ -133,11 +162,39 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "logout",
+    path: "/stripe-checkout",
+    element: (
+      <Protected>
+        <StripeCheckOut />
+      </Protected>
+    ),
+  },
+  {
+    path: "/stripe-checkout/checkout",
+    element: (
+      <Protected>
+        <StripeCheckOut>
+          <CheckoutForm />
+        </StripeCheckOut>
+      </Protected>
+    ),
+  },
+  {
+    path: "/stripe-checkout/complete",
+    element: (
+      <Protected>
+        <StripeCheckOut>
+          <CompletePage />
+        </StripeCheckOut>
+      </Protected>
+    ),
+  },
+  {
+    path: "/logout",
     element: <Logout />,
   },
   {
-    path: "forgot-password",
+    path: "/forgot-password",
     element: <ForgotPasswordPage />,
   },
   {
@@ -147,19 +204,27 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const user = useSelector(selectedLoggedInUser);
   const dispatch = useDispatch();
+  const user = useSelector(selectedLoggedInUser);
+  const userChecked = useSelector(selectUserChecked);
 
   useEffect(() => {
-    dispatch(fetchCartByUserAsync(user?.id));
-    dispatch(fetchLoggedInUserAsync(user?.id));
+    dispatch(checkAuthUserAsync());
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchCartByUserAsync());
+      dispatch(fetchLoggedInUserAsync());
+    }
   }, [dispatch, user]);
 
   return (
     <div className="App">
       {/* <Home /> */}
       {/* <LoginPage /> */}
-      <RouterProvider router={router} />
+      {userChecked && <RouterProvider router={router} />}
+      <ToastContainer />
     </div>
   );
 }

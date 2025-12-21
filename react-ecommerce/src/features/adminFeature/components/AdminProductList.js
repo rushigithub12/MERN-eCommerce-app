@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
 import {
   Dialog,
   DialogBackdrop,
@@ -22,56 +21,23 @@ import {
   Squares2X2Icon,
   StarIcon,
 } from "@heroicons/react/20/solid";
-
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
 import {
   fetchAllProductByBrandsAsync,
   fetchAllProductByCategoriesAsync,
   fetchAllProductByFiltersAsync,
-  fetchAllProductsAsync,
   selectProductBrands,
   selectProductCategories,
-  selectProducts,
   selectTotalItems,
 } from "../../productList/productSlice";
 import { discountedPrice, ITEM_PER_PAGE } from "../../../app/constants";
-
-const items = [
-  {
-    id: 1,
-    title: "Back End Developer",
-    department: "Engineering",
-    type: "Full-time",
-    location: "Remote",
-  },
-  {
-    id: 2,
-    title: "Front End Developer",
-    department: "Engineering",
-    type: "Full-time",
-    location: "Remote",
-  },
-  {
-    id: 3,
-    title: "User Interface Designer",
-    department: "Design",
-    type: "Full-time",
-    location: "Remote",
-  },
-];
+import { fetchCartByUserAsync } from "../../cart/cartSlice";
 
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
   { name: "Price: Low to High", sort: "price", order: "asc", current: false },
   { name: "Price: High to Low", sort: "price", order: "desc", current: false },
-];
-const subCategories = [
-  { name: "Totes", href: "#" },
-  { name: "Backpacks", href: "#" },
-  { name: "Travel Bags", href: "#" },
-  { name: "Hip Bags", href: "#" },
-  { name: "Laptop Sleeves", href: "#" },
 ];
 
 function classNames(...classes) {
@@ -117,19 +83,16 @@ export default function AdminProductList() {
       );
       newFilter[section.id].splice(index, 1);
     }
-    console.log("newFilter==>>", newFilter);
 
     setFilter(newFilter);
   };
 
   const handleSort = (e, option) => {
     const sort = { _sort: option.sort, _order: option.order };
-    console.log({ sort });
     setSort(sort);
   };
 
   const handlePage = (page) => {
-    console.log("handlePage", page);
     setPage(page);
   };
 
@@ -139,13 +102,15 @@ export default function AdminProductList() {
 
   useEffect(() => {
     const pagination = { _page: page, _limit: ITEM_PER_PAGE };
-    dispatch(fetchAllProductByFiltersAsync({ filter, sort, pagination }));
+    dispatch(
+      fetchAllProductByFiltersAsync({ filter, sort, pagination, admin: true })
+    );
   }, [dispatch, filter, sort, page]);
 
   useEffect(() => {
     dispatch(fetchAllProductByBrandsAsync());
     dispatch(fetchAllProductByCategoriesAsync());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="bg-white">
@@ -519,49 +484,41 @@ function PaginationComp({
 
 function ProductGrid({ products }) {
   return (
-    <>
-      <div className="lg:col-span-3">
-        <div className="bg-white">
-          <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-              {products?.map((product) => (
-                <Link to={`product-detail/${product.id}`} key={product.id}>
-                  <div>
-                    <div className="group relative border-2 border-solid border-gray-200 p-2">
-                      <div className="min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
-                        <img
-                          alt={product.thumbnail}
-                          src={product.thumbnail}
-                          className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                        />
+    <div className="lg:col-span-3">
+      <div className="bg-white">
+        <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
+          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+            {products?.map((product) => (
+              <div key={product.id}>
+                <Link to={`product-detail/${product.id}`}>
+                  <div className="group relative border-2 border-solid border-gray-200 p-2">
+                    <div className="min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
+                      <img
+                        alt={product.thumbnail}
+                        src={product.thumbnail}
+                        className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                      />
+                    </div>
+
+                    <div className="mt-4 flex justify-between">
+                      <div>
+                        <h3 className="text-sm text-gray-700">
+                          {product.title}
+                        </h3>
+
+                        <p className="mt-1 text-sm text-gray-500">
+                          <StarIcon className="h-6 w-6 inline" />
+                          <span className="align-bottom">{product.rating}</span>
+                        </p>
                       </div>
-                      <div className="mt-4 flex justify-between">
-                        <div>
-                          <h3 className="text-sm text-gray-700">
-                            <span href={product.thumbnail}>
-                              <span
-                                aria-hidden="true"
-                                className="absolute inset-0"
-                              />
-                              {product.title}
-                            </span>
-                          </h3>
-                          <p className="mt-1 text-sm text-gray-500">
-                            <StarIcon className="h-6 w-6 inline" />
-                            <span className="align-bottom">
-                              {product.rating}
-                            </span>
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-sm block font-medium text-gray-900">
-                            $
-                            {discountedPrice(product)}
-                          </p>
-                          <p className="text-sm block font-medium text-gray-400 line-through ">
-                            ${product.price}
-                          </p>
-                        </div>
+
+                      <div>
+                        <p className="text-sm block font-medium text-gray-900">
+                          ${discountedPrice(product)}
+                        </p>
+                        <p className="text-sm block font-medium text-gray-400 line-through">
+                          ${product.price}
+                        </p>
                       </div>
                       {product.deleted && (
                         <div className="text-red-400 font-semibold">Product Deleted</div>
@@ -575,13 +532,35 @@ function ProductGrid({ products }) {
                         Edit Product
                       </Link>
                     </div>
+
+                    {product.deleted && (
+                      <div className="text-red-400 font-semibold">
+                        Product Deleted
+                      </div>
+                    )}
+                    {product.stock <= 0 && (
+                      <div className="text-red-400 font-semibold">
+                        Out of Stock
+                      </div>
+                    )}
                   </div>
                 </Link>
-              ))}
-            </div>
+                <div className="mt-5">
+                  <Link
+                    to={`/admin/product-form/${product.id}`}
+                    className="rounded-md my-15 bg-indigo-600 px-3 py-1.5 text-sm font-semibold
+                               leading-6 text-white shadow-sm hover:bg-indigo-500 
+                               focus-visible:outline focus-visible:outline-2
+                               focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    Edit Product
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

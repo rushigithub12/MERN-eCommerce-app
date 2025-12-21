@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { Radio, RadioGroup } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductByIdAsync, selectedProductbyId } from "../productSlice";
+import {
+  fetchProductByIdAsync,
+  selectedProductbyId,
+  selectProductStatus,
+} from "../productSlice";
 import { useParams } from "react-router-dom";
 import { addToCartAsync, selectCartItems } from "../../cart/cartSlice";
-import { selectedLoggedInUser } from "../../auth/authSlice";
 import { discountedPrice } from "../../../app/constants";
+import { Grid } from "react-loader-spinner";
 
 const colors = [
   { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
@@ -37,17 +41,15 @@ export default function ProductDetails() {
   const dispatch = useDispatch();
 
   const product = useSelector(selectedProductbyId);
-  const user = useSelector(selectedLoggedInUser);
   const cartItems = useSelector(selectCartItems);
+  const status = useSelector(selectProductStatus);
 
   const handleAddCart = (e) => {
     e.preventDefault();
-    if (cartItems.findIndex((cart) => cart.productId === product.id) < 0) {
+    if (cartItems.findIndex((cart) => cart.product.id === product.id) < 0) {
       const newCartitem = {
-        ...product,
-        productId: product.id,
+        product: product.id,
         quantity: 1,
-        user: user.id,
       };
       delete newCartitem["id"];
       dispatch(addToCartAsync({ ...newCartitem }));
@@ -62,6 +64,18 @@ export default function ProductDetails() {
 
   return (
     <div className="bg-white">
+      {status === "pending" ? (
+        <Grid
+          height="80"
+          width="80"
+          color="rgb(79, 70, 229) "
+          ariaLabel="grid-loading"
+          radius="12.5"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+      ) : null}
       {product && (
         <div className="pt-6">
           <nav aria-label="Breadcrumb">

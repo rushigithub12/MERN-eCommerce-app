@@ -1,6 +1,4 @@
 import React from "react";
-import { errorLoggedInUser, selectedLoggedInUser } from "../authSlice";
-import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
@@ -12,8 +10,6 @@ function ForgotPassword() {
     formState: { errors },
   } = useForm();
 
-  const user = useSelector(selectedLoggedInUser);
-  const loginError = useSelector(errorLoggedInUser);
 
   return (
     <>

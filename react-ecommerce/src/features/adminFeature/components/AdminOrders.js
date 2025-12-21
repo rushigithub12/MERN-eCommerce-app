@@ -17,7 +17,7 @@ import PaginationComponent from "../../../common/PaginationComponent";
 
 function AdminOrders() {
   const [page, setPage] = useState(1);
-  const [editableOrder, setEditableOrder] = useState(-1);
+  const [editableOrderId, setEditableOrderId] = useState(-1);
   const [sort, setSort] = useState({});
 
   const orders = useSelector(selectOrders);
@@ -29,12 +29,13 @@ function AdminOrders() {
   };
 
   const handleEdit = (order) => {
-    setEditableOrder(order.id);
+    setEditableOrderId(order.id);
   };
 
   const handleUpdateStatus = (e, order) => {
     const updatedOrder = { ...order, status: e.target.value };
     dispatch(updateOrderAsync(updatedOrder));
+    setEditableOrderId(-1);
   };
 
   const handlePage = (page) => {
@@ -47,7 +48,7 @@ function AdminOrders() {
   };
 
   useEffect(() => {
-    const pagination = { _page: page, _per_page: ITEM_PER_PAGE };
+    const pagination = { _page: page, _limit: ITEM_PER_PAGE };
     dispatch(fetchAllOrdersAsync({ sort, pagination }));
   }, [dispatch, page, sort]);
 
@@ -130,12 +131,12 @@ function AdminOrders() {
                             <div className="mr-2">
                               <img
                                 className="w-6 h-6 rounded-full"
-                                src={item.thumbnail}
+                                src={item.product.thumbnail}
                               />
                             </div>
                             <span>
-                              {item.title} - #{item.quantity} - $
-                              {discountedPrice(item)}
+                              {item.product.title} - #{item.quantity} - $
+                              {discountedPrice(item.product)}
                             </span>
                           </div>
                         ))}
@@ -156,10 +157,9 @@ function AdminOrders() {
                         </div>
                       </td>
                       <td className="py-3 px-6 text-center">
-                        {order.id === editableOrder ? (
+                        {order.id === editableOrderId ? (
                           <select
-                            name=""
-                            id=""
+                            value={order.status}
                             onChange={(e) => handleUpdateStatus(e, order)}
                           >
                             <option value="pending">Pending</option>

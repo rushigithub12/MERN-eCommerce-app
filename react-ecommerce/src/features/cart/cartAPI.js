@@ -1,63 +1,56 @@
+import { api } from "../../api/apiClient";
 
-export function addToCart(item) {
-  return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/cart", {
-      method: "POST",
-      body: JSON.stringify(item),
-      headers: {
-        "content-type": "application/json",
-      },
+export async function addToCart(item) {
+  return api
+    .post("/cart", item)
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to add item to cart");
     });
-    const data = await response.json();
-    resolve({ data });
-  });
 }
 
-export function fetchCartByUser(userId){
-  return new Promise(async(resolve) => {
-    const response = await fetch("http://localhost:8080/cart?user=" + userId);
-    const data = await response.json();
-    resolve({ data })
-  })
-}
-
-
-export function updateCartItem(updatedItem) {
-  return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/cart/" + updatedItem?.id, {
-      method: "PATCH",
-      body: JSON.stringify(updatedItem),
-      headers: {
-        "content-type": "application/json",
-      },
+export async function fetchCartByUser() {
+  return api
+    .get("/cart")
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to fetch cart");
     });
-    const data = await response.json();
-    resolve({ data });
-  });
 }
 
-export function removeItemFromCart(itemId) {
-  return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/cart/" + itemId, {
-      method: "DELETE",
-      headers: {
-        "content-type": "application/json",
-      },
+export async function updateCartItem(updatedItem) {
+  return api
+    .patch(`/cart/${updatedItem?.id}`, updatedItem)
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to update cart item");
     });
-    const data = await response.json();
-    resolve({ data: { id: itemId } });
-  });
 }
 
-export function resetCart(userId){
-  return new Promise(async(resolve, reject) => {
-    const response = await fetchCartByUser(userId);
-    const cartsData = await response.data;
-    console.log("cartsData===>", cartsData)
-    for(let cart of cartsData){
-      await removeItemFromCart(cart.id)
+export async function removeItemFromCart(itemId) {
+  return api
+    .delete(`/cart/${itemId}`)
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to remove item from cart");
+    });
+}
+
+export async function resetCart(userId) {
+  try {
+    const cartResponse = await fetchCartByUser();
+    const cartsData = cartResponse.data || [];
+
+    for (const cart of cartsData) {
+      try {
+        await removeItemFromCart(cart.id);
+      } catch (error) {
+        console.error(`Failed to remove cart item ${cart.id}:`, error);
+      }
     }
-    resolve({ status: "success" })
-  })
-  
+
+    return { status: "success" };
+  } catch (error) {
+    throw new Error(error.message || "Failed to reset cart");
+  }
 }

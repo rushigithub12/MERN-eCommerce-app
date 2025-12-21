@@ -10,7 +10,8 @@ import {
   updateProductAsync,
 } from "../../productList/productSlice";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function ProductForm() {
   const {
@@ -20,6 +21,8 @@ function ProductForm() {
     reset,
     formState: { errors },
   } = useForm();
+
+  const navigate = useNavigate();
 
   const param = useParams();
   const selectProduct = useSelector(selectedProductbyId);
@@ -39,12 +42,11 @@ function ProductForm() {
 
   useEffect(() => {
     if (selectProduct && param.id) {
-      console.log("selectProduct===>>>", selectProduct);
       setValue("title", selectProduct.title);
       setValue("description", selectProduct.description);
       setValue("brand", selectProduct.brand);
       setValue("price", selectProduct.price);
-      setValue("discountPercentage", selectProduct.discountPercentage);
+      setValue("discountPercentage", selectProduct.discountPercentage * 100);
       setValue("stock", selectProduct.stock);
       setValue("thumbnail", selectProduct.thumbnail);
       setValue("category", selectProduct.category);
@@ -58,6 +60,11 @@ function ProductForm() {
     updatedProductInfo.deleted = true;
 
     dispatch(updateProductAsync(updatedProductInfo));
+    toast.error("Product Deleted!");
+  };
+
+  const handleCancelButton = () => {
+    navigate("/admin");
   };
 
   return (
@@ -71,16 +78,18 @@ function ProductForm() {
           delete product.image2;
 
           product.rating = 0;
-          product.price = +product.price;
-          product.discountPercentage = +product.discountPercentage;
-          product.stock = +product.stock;
+          product.price = Number(product.price);
+          product.stock = Number(product.stock);
+          product.discountPercentage = Number(product.discountPercentage) / 100;
 
           if (param.id) {
             product.id = param.id;
             product.rating = selectProduct.rating || 0;
             dispatch(updateProductAsync(product));
+            toast.success("Product updated!");
           } else {
             dispatch(createProductAsync(product));
+            toast.success("Product created!");
             reset();
           }
         })}
@@ -90,7 +99,9 @@ function ProductForm() {
             <h2 className="text-base/7 font-semibold text-gray-900">
               Add Product
             </h2>
-
+            {selectProduct && selectProduct.deleted && (
+              <div className="text-red-400 font-semibold">Product Deleted</div>
+            )}
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-6">
                 <label
@@ -226,13 +237,21 @@ function ProductForm() {
                       type="number"
                       {...register("discountPercentage", {
                         required: "discountPercentage is required",
-                        min: 0,
-                        max: 100,
+                        min: { value: 0, message: "Minimum is 0%" },
+                        max: { value: 99, message: "Maximum is 99%" },
+                        validate: (v) =>
+                          /^\d{1,2}(\.\d{1,2})?$/.test(v) ||
+                          "Enter max 2 digits (0–99)",
                       })}
                       id="discountPercentage"
                       className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     />
                   </div>
+                  {errors.discountPercentage && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.discountPercentage.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -330,6 +349,7 @@ function ProductForm() {
           <button
             type="button"
             className="text-sm/6 font-semibold text-gray-900"
+            onClick={handleCancelButton}
           >
             Cancel
           </button>

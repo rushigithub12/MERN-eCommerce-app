@@ -1,87 +1,94 @@
-// A mock function to mimic making an async request for data
-export function fetchAllProducts() {
-  return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/products");
-    const data = await response.json();
-    resolve({ data });
-  });
-}
+import { api } from "../../api/apiClient";
 
-export function createProduct(product) {
-  return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/products", {
-      method: "POST",
-      body: JSON.stringify(product),
-      headers: {
-        "content-type": "application/json",
-      },
+export async function createProduct(product) {
+  return api
+    .post("/products", product)
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to create product");
     });
-    const data = await response.json();
-    resolve({ data });
-  });
 }
 
-export function updateProduct(product) {
-  return new Promise(async (resolve) => {
-    const response = await fetch(`http://localhost:8080/products/${product.id}`, {
-      method: "PUT",
-      body: JSON.stringify(product),
-      headers: {
-        "content-type": "application/json",
-      },
+export async function updateProduct(product) {
+  return api
+    .patch(`/products/${product.id}`, product)
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to update product");
     });
-    const data = await response.json();
-    resolve({ data });
-  });
 }
 
-export function fetchProductById(id) {
-  return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/products/" + id);
-    const data = await response.json();
-    resolve({ data });
-  });
+export async function fetchProductById(id) {
+  return api
+    .get(`/products/${id}`)
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to fetch product");
+    });
 }
 
-export function fetchAllProductsByFilter(filter, sort, pagination) {
-  //filter={ "category": "smartphone" };
-  let queryString = "";
-  for (let key in filter) {
-    const categoryValues = filter[key];
-    if (categoryValues.length) {
-      queryString += `${key}=${categoryValues}&`;
+export async function fetchAllProductsByFilter(
+  filter = {},
+  sort = {},
+  pagination = {},
+  admin = false
+) {
+  try {
+    const params = {};
+
+    for (const key in filter) {
+      const categoryValues = filter[key];
+      if (Array.isArray(categoryValues) && categoryValues.length) {
+        params[key] = categoryValues;
+      }
     }
-  }
-  
-  for (let key in sort) {
-    queryString += `${key}=${sort[key]}&`;
-  }
 
-  for (let key in pagination) {
-    queryString += `${key}=${pagination[key]}&`;
-  }
+    for (const key in sort) {
+      params[key] = sort[key];
+    }
 
-  return new Promise(async (resolve) => {
-    const response = await fetch(
-      "http://localhost:8080/products?" + queryString
+    for (const key in pagination) {
+      params[key] = pagination[key];
+    }
+
+    if (admin) {
+      params.admin = true;
+    }
+
+    return api
+      .get("/products", { params })
+      .then((data) => ({
+        data: {
+          products: Array.isArray(data)
+            ? data
+            : data.products || data.data || [],
+          totalItems: data.items || data.total || 0,
+        },
+      }))
+      .catch((error) => {
+        throw new Error(error.message || "Failed to fetch products");
+      });
+  } catch (error) {
+    return Promise.reject(
+      new Error(error.message || "Failed to fetch products")
     );
-    const productsData = await response.json();
-    resolve({ data: { products: productsData.data, totalItems: productsData.items } });
-  });
+  }
 }
 
-export function fetchProductbrands() {
-  return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/brands");
-    const data = await response.json();
-    resolve({ data });
-  });
+export async function fetchProductbrands() {
+  return api
+    .get("/brands")
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to fetch brands");
+    });
 }
 
-export function fetchProductCategories() {
-  return new Promise(async (resolve) => {
-    const response = await fetch("http://localhost:8080/category");
-    const data = await response.json();
-    resolve({ data });
-  });
+export async function fetchProductCategories() {
+  return api
+    .get("/category")
+    .then((data) => ({ data }))
+    .catch((error) => {
+      throw new Error(error.message || "Failed to fetch categories");
+    });
 }

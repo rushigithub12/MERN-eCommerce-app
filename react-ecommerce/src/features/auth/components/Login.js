@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   checkloggedInUserAsync,
@@ -9,6 +9,10 @@ import {
 } from "../authSlice";
 
 function Login() {
+  const user = useSelector(selectedLoggedInUser);
+  const loginError = useSelector(errorLoggedInUser);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -16,13 +20,18 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-  const user = useSelector(selectedLoggedInUser);
-  const loginError = useSelector(errorLoggedInUser);
-  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!user) return;
+
+    if (user?.role && user.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
+    }
+  }, [user]);
 
   return (
     <>
-      {user && <Navigate to="/" replace={true} />}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-white">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
@@ -108,7 +117,9 @@ function Login() {
                   <p className="text-red-500">{errors?.password?.message}</p>
                 )}
                 {loginError && (
-                  <p className="text-red-500">{loginError?.message}</p>
+                  <p className="text-red-500">
+                    {loginError || loginError?.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -124,7 +135,7 @@ function Login() {
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
-            Not a member? {' '}
+            Not a member?{" "}
             <Link
               to="/signup"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"

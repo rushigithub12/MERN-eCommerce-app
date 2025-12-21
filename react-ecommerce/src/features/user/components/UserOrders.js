@@ -1,23 +1,30 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectedLoggedInUser } from "../../auth/authSlice";
-import { fetchLoggedInUseOrdersrAsync, selectUserInfo, selectUserOrders } from "../userSlice";
+import {
+  fetchLoggedInUserOrdersrAsync,
+  selectUserInfoStatus,
+  selectUserOrders,
+} from "../userSlice";
 import { discountedPrice } from "../../../app/constants";
+import { Grid } from "react-loader-spinner";
 
 function UserOrders() {
   const dispatch = useDispatch();
-  const user = useSelector(selectUserInfo);
   const userOrders = useSelector(selectUserOrders);
+  const status = useSelector(selectUserInfoStatus);
 
   useEffect(() => {
-    dispatch(fetchLoggedInUseOrdersrAsync(user.id));
-  }, []);
+    dispatch(fetchLoggedInUserOrdersrAsync());
+  }, [dispatch]);
 
   return (
     <div>
-      {userOrders?.map((order) => (
-        
-          <div key={order.id} className="mx-auto mt-12 bg-white max-w-7xl px-2 sm:px-2 lg:px-4">
+      {userOrders &&
+        userOrders?.map((order) => (
+          <div
+            key={order.id}
+            className="mx-auto mt-12 bg-white max-w-7xl px-2 sm:px-2 lg:px-4"
+          >
             <div className="border-t border-gray-200 px-0 py-6 sm:px-0">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900">
                 Order #{order.id}
@@ -32,8 +39,8 @@ function UserOrders() {
                       <li key={order.id} className="flex py-6">
                         <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                           <img
-                            alt={order.title}
-                            src={order.thumbnail}
+                            alt={order.product.title}
+                            src={order.product.thumbnail}
                             className="h-full w-full object-cover object-center"
                           />
                         </div>
@@ -42,12 +49,14 @@ function UserOrders() {
                           <div>
                             <div className="flex justify-between text-base font-medium text-gray-900">
                               <h3>
-                                <a href={order.href}>{order.title}</a>
+                                <a href={order.href}>{order.product.title}</a>
                               </h3>
-                              <p className="ml-4">${discountedPrice(order)}</p>
+                              <p className="ml-4">
+                                ${discountedPrice(order.product)}
+                              </p>
                             </div>
                             <p className="mt-1 text-sm text-gray-500">
-                              {order.brand}
+                              {order.product.brand}
                             </p>
                           </div>
                           <div className="flex flex-1 items-end justify-between text-sm">
@@ -99,8 +108,20 @@ function UserOrders() {
               </div>
             </div>
           </div>
-        
-      ))}
+        ))}
+
+      {status === "pending" ? (
+        <Grid
+          height="80"
+          width="80"
+          color="rgb(79, 70, 229) "
+          ariaLabel="grid-loading"
+          radius="12.5"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+      ) : null}
     </div>
   );
 }

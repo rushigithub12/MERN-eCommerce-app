@@ -4,7 +4,6 @@ import { Radio, RadioGroup } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { addToCartAsync } from "../../cart/cartSlice";
-import { selectedLoggedInUser } from "../../auth/authSlice";
 import {
   fetchProductByIdAsync,
   selectedProductbyId,
@@ -40,11 +39,13 @@ export default function AdminProductDetails() {
   const dispatch = useDispatch();
 
   const product = useSelector(selectedProductbyId);
-  const user = useSelector(selectedLoggedInUser);
 
   const handleAddCart = (e) => {
     e.preventDefault();
-    const newCartitem = { ...product, quantity: 1, user: user.id };
+    const newCartitem = {
+      product: product.id,
+      quantity: 1,
+    };
     delete newCartitem["id"];
     dispatch(addToCartAsync({ ...newCartitem }));
   };
@@ -270,8 +271,9 @@ export default function AdminProductDetails() {
 
                 <button
                   type="submit"
-                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
                   onClick={handleAddCart}
+                  disabled={product.deleted}
                 >
                   Add to cart
                 </button>
