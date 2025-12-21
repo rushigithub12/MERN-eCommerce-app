@@ -9,6 +9,10 @@ import {
   selectCartLoaded,
   updateCartItemAsync,
 } from "./cartSlice";
+import { discountedPrice } from "../../app/constants";
+import AlertModal from "../../common/AlertModal";
+
+Modal.setAppElement("#root"); // Required for accessibility
 
 export function Cart() {
   const [openModal, setOpenModal] = useState(null);
@@ -110,6 +114,14 @@ export function Cart() {
                             Remove
                           </button>
                         </div>
+                        <AlertModal
+                          isOpen={modalIsOpen}
+                          onClose={closeModal}
+                          onConfirm={confirmRemoveItem}
+                          type="error"
+                          title={`Delete ${item.title || ""}`}
+                          message="Are you sure you want to delete this Cart item ?"
+                        />
                       </div>
                     </div>
                   </li>

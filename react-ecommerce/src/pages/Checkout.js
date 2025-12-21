@@ -33,7 +33,7 @@ export default function Checkout() {
 
   const cartItems = useSelector(selectCartItems);
   const totalAmount = cartItems?.reduce(
-    (amount, item) => discountedPrice(item.product) * item.quantity + amount,
+    (amount, item) => item.price * item.quantity + amount,
     0
   );
   const totalitems = cartItems?.reduce(
@@ -401,9 +401,7 @@ export default function Checkout() {
                                   {item.product.title}
                                 </a>
                               </h3>
-                              <p className="ml-4">
-                                ${discountedPrice(item.product)}
-                              </p>
+                              <p className="ml-4">${item.price}</p>
                             </div>
                             <p className="mt-1 text-sm text-gray-500">
                               {item.product.brand}
