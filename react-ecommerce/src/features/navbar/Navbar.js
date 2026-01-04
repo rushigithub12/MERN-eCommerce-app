@@ -50,8 +50,8 @@ function Navbar({ children }) {
                     <div className="flex-shrink-0">
                       <img
                         alt="Your Company"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                        className="h-8 w-8"
+                        src="/myLogo/ecommerce logo.avif"
+                        className="h-8 w-8 rounded-[50%]"
                       />
                     </div>
                   </Link>
@@ -107,7 +107,7 @@ function Navbar({ children }) {
                           <span className="sr-only">Open user menu</span>
                           <img
                             alt=""
-                            src={userInfo.imageUrl}
+                            src="/myLogo/profile-logo.jpg"
                             className="h-8 w-8 rounded-full"
                           />
                         </MenuButton>
@@ -173,8 +173,8 @@ function Navbar({ children }) {
                   <div className="flex-shrink-0">
                     <img
                       alt=""
-                      src={userInfo.imageUrl}
-                      className="h-10 w-10 rounded-full"
+                      src="/myLogo/profile-logo.jpg"
+                      className="h-8 w-8 rounded-full"
                     />
                   </div>
                   <div className="ml-3">
@@ -208,7 +208,7 @@ function Navbar({ children }) {
                     <DisclosureButton
                       key={item.name}
                       as="a"
-                      href={item.href}
+                      href={item.link}
                       className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                     >
                       {item.name}
