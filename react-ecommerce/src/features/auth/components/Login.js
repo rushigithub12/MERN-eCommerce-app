@@ -4,13 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   checkloggedInUserAsync,
-  errorLoggedInUser,
+  selectErrorAuth,
   selectedLoggedInUser,
 } from "../authSlice";
 
 function Login() {
   const user = useSelector(selectedLoggedInUser);
-  const loginError = useSelector(errorLoggedInUser);
+  const loginError = useSelector(selectErrorAuth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
@@ -19,6 +19,8 @@ function Login() {
     watch,
     formState: { errors },
   } = useForm();
+
+  console.log("loginError====>>", loginError, errors)
 
   useEffect(() => {
     if (!user) return;
@@ -37,7 +39,7 @@ function Login() {
           <div className="flex justify-center" >
             <img
               alt="Your Company"
-              src="/myLogo/ecommerce logo.avif"
+              src="/myLogo/ecommerce-logo.avif"
               className="h-12 w-12 rounded-[50%]"
             />
           </div>

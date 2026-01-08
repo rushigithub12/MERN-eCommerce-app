@@ -50,7 +50,7 @@ function Navbar({ children }) {
                     <div className="flex-shrink-0">
                       <img
                         alt="Your Company"
-                        src="/myLogo/ecommerce logo.avif"
+                        src="/myLogo/ecommerce-logo.avif"
                         className="h-8 w-8 rounded-[50%]"
                       />
                     </div>
