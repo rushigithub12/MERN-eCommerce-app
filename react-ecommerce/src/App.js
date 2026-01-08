@@ -31,6 +31,7 @@ import { fetchLoggedInUserAsync } from "./features/user/userSlice";
 import StripeCheckOut from "./pages/StripeCheckOut";
 import CheckoutForm from "./pages/CheckoutForm";
 import CompletePage from "./pages/CompletePage";
+import ResetPassword from "./features/auth/components/ResetPassword";
 
 const router = createBrowserRouter([
   {
@@ -196,6 +197,10 @@ const router = createBrowserRouter([
   {
     path: "/forgot-password",
     element: <ForgotPasswordPage />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
   },
   {
     path: "*",

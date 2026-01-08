@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
+const apiUrl = "http://localhost:8080";
 
 export const API_BASE_URL = apiUrl;
 
