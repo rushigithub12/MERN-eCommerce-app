@@ -23,8 +23,6 @@ export default function Checkout() {
     register,
     handleSubmit,
     reset,
-    watch,
-    formState: { errors },
   } = useForm();
 
   const user = useSelector(selectUserInfo);
@@ -290,7 +288,7 @@ export default function Checkout() {
                     Choose from existing address
                   </p>
 
-                  <ul role="list" className="divide-y divide-gray-100">
+                  <ul className="divide-y divide-gray-100">
                     {user?.addresses.map((address, index) => (
                       <li
                         key={index}
@@ -382,7 +380,7 @@ export default function Checkout() {
                   Cart
                 </h1>
                 <div className="flow-root">
-                  <ul role="list" className="-my-6 divide-y divide-gray-200">
+                  <ul className="-my-6 divide-y divide-gray-200">
                     {cartItems?.map((item) => (
                       <li key={item.id} className="flex py-6">
                         <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
