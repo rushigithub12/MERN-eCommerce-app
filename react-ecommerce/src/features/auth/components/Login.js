@@ -20,7 +20,7 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-  console.log("loginError====>>", loginError, errors)
+  console.log("loginError====>>", loginError, errors);
 
   useEffect(() => {
     if (!user) return;
@@ -36,7 +36,7 @@ function Login() {
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-white">
         <div className="flex justify-center flex-col  sm:mx-auto sm:w-full sm:max-w-sm">
-          <div className="flex justify-center" >
+          <div className="flex justify-center">
             <img
               alt="Your Company"
               src="/myLogo/ecommerce-logo.avif"
@@ -56,7 +56,7 @@ function Login() {
                 checkloggedInUserAsync({
                   email: data.email,
                   password: data.password,
-                })
+                }),
               );
             })}
             className="space-y-6"
@@ -83,6 +83,7 @@ function Login() {
                 />
                 <p className="text-red-500">{errors?.email?.message}</p>
               </div>
+              <p>Email: admin1@email.com</p>
             </div>
 
             <div>
@@ -126,6 +127,7 @@ function Login() {
                   </p>
                 )}
               </div>
+              <p>Password: Password@123</p>
             </div>
 
             <div>
