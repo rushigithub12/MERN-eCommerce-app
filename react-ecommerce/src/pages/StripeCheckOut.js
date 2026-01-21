@@ -10,7 +10,6 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 export default function StripeCheckOut({ children }) {
   const [clientSecret, setClientSecret] = useState("");
-  const [error, setError] = useState("");
   const currentOrder = useSelector(selectCurrentOrder);
 
   useEffect(() => {
@@ -24,18 +23,16 @@ export default function StripeCheckOut({ children }) {
         })
         .then((response) => {
           setClientSecret(response.data.clientSecret);
-          setError("");
         })
         .catch((err) => {
           const errorMessage =
             err.response?.data?.message ||
             err.message ||
             "Failed to create payment intent";
-          setError(errorMessage);
           console.error("Payment intent error:", errorMessage);
         });
     }
-  }, [currentOrder?.totalAmount]);
+  }, [currentOrder?.totalAmount, currentOrder?.id]);
 
   const appearance = {
     theme: "stripe",

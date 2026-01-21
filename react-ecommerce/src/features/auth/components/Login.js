@@ -20,8 +20,6 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-  console.log("loginError====>>", loginError, errors);
-
   useEffect(() => {
     if (!user) return;
 
