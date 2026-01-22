@@ -78,7 +78,7 @@ export default function AdminProductList() {
       }
     } else {
       const index = newFilter[section.id].findIndex(
-        (el) => el === option.value
+        (el) => el === option.value,
       );
       newFilter[section.id].splice(index, 1);
     }
@@ -95,6 +95,14 @@ export default function AdminProductList() {
     setPage(page);
   };
 
+  const handlePrevious = () => {
+    setPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNext = () => {
+    setPage((prev) => prev + 1);
+  };
+
   useEffect(() => {
     setPage(1);
   }, [totalItems, sort]);
@@ -102,7 +110,7 @@ export default function AdminProductList() {
   useEffect(() => {
     const pagination = { _page: page, _limit: ITEM_PER_PAGE };
     dispatch(
-      fetchAllProductByFiltersAsync({ filter, sort, pagination, admin: true })
+      fetchAllProductByFiltersAsync({ filter, sort, pagination, admin: true }),
     );
   }, [dispatch, filter, sort, page]);
 
@@ -153,7 +161,7 @@ export default function AdminProductList() {
                             option.current
                               ? "font-medium text-gray-900"
                               : "text-gray-500",
-                            "block px-4 py-2 text-sm data-[focus]:bg-gray-100"
+                            "block px-4 py-2 text-sm data-[focus]:bg-gray-100",
                           )}
                         >
                           {option.name}
@@ -209,19 +217,23 @@ export default function AdminProductList() {
 
           <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
             <div className="flex flex-1 justify-between sm:hidden">
-              <a
-                href="#"
+              <button
+                type="button"
+                onClick={handlePrevious}
                 className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
                 Previous
-              </a>
-              <a
-                href="#"
+              </button>
+
+              <button
+                type="button"
+                onClick={handleNext}
                 className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
                 Next
-              </a>
+              </button>
             </div>
+
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm text-gray-700">
@@ -520,7 +532,9 @@ function ProductGrid({ products }) {
                         </p>
                       </div>
                       {product.deleted && (
-                        <div className="text-red-400 font-semibold">Product Deleted</div>
+                        <div className="text-red-400 font-semibold">
+                          Product Deleted
+                        </div>
                       )}
                     </div>
                     <div className="mt-5">
