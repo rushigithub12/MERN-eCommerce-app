@@ -59,10 +59,7 @@ export default function AdminProductDetails() {
       {product && (
         <div className="pt-6">
           <nav aria-label="Breadcrumb">
-            <ol
-              role="list"
-              className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
-            >
+            <ol className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
               {/* {product.breadcrumbs &&
               product.breadcrumbs.map((breadcrumb) => (
                 <li key={breadcrumb.id}>
@@ -210,12 +207,11 @@ export default function AdminProductDetails() {
                 <div className="mt-10">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-medium text-gray-900">Size</h3>
-                    <a
-                      href="#"
+                    <button
                       className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
                     >
                       Size guide
-                    </a>
+                    </button>
                   </div>
 
                   <fieldset aria-label="Choose a size" className="mt-4">
@@ -298,7 +294,7 @@ export default function AdminProductDetails() {
                 </h3>
 
                 <div className="mt-4">
-                  <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
+                  <ul className="list-disc space-y-2 pl-4 text-sm">
                     {product.highlights &&
                       product.highlights?.map((highlight) => (
                         <li key={highlight} className="text-gray-400">

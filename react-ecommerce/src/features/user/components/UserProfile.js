@@ -10,9 +10,7 @@ function UserProfile() {
     register,
     handleSubmit,
     reset,
-    watch,
-    setValue,
-    formState: { errors },
+    setValue
   } = useForm();
 
   const [selectedEditIndex, setSelectedIndex] = useState(-1);

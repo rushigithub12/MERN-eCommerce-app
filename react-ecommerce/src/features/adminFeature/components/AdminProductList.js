@@ -32,7 +32,6 @@ import {
   selectTotalItems,
 } from "../../productList/productSlice";
 import { discountedPrice, ITEM_PER_PAGE } from "../../../app/constants";
-import { fetchCartByUserAsync } from "../../cart/cartSlice";
 
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },

@@ -53,7 +53,7 @@ function ProductForm() {
       setValue("image1", selectProduct.images[0]);
       setValue("image2", selectProduct.images[1]);
     }
-  }, [selectProduct, param.id]);
+  }, [selectProduct, param.id, setValue]);
 
   const handleDeleteProduct = () => {
     const updatedProductInfo = { ...selectProduct };

@@ -215,7 +215,7 @@ function App() {
 
   useEffect(() => {
     dispatch(checkAuthUserAsync());
-  }, []);
+  });
 
   useEffect(() => {
     if (user) {
