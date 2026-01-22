@@ -16,7 +16,6 @@ function Login() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
@@ -28,7 +27,7 @@ function Login() {
     } else {
       navigate("/");
     }
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <>
